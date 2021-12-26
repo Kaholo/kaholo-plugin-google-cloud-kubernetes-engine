@@ -5,9 +5,9 @@
   "execProgram": "node",
   "main": "app.js",
   "imgUrl": "logo.png",
-  "version": "1.0.1",
+  "version": "1.0.3",
   "description": "Kaholo plugin for integration with Google Cloud Kubernetes Engine(GKE).",
-  "category": "CLOUDS",
+  "category": ["CLOUD", "CONTAINERS"],
   "keywords": ["GCP", "kubernetes", "k8", "gke", "google", "run", "google", "platform", "vm", "instance", "cloud", "cluster", "project", "infra", "infrastructure", "cli", "network", "subnetwork", "firewall", "IP", "route", "storage"],
   "settings": [
     {
