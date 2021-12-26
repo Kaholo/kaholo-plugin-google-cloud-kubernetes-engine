@@ -9,11 +9,17 @@ const containerApi = google.container('v1');
 module.exports = class GKEService{
     constructor({credentials, projectId}){
         if (!credentials || !projectId) throw "Must provide credentials and project!";
+        if (typeof credentials !== "object") throw "Credentials provided in a bad format";
         this.options = {
             credentials, projectId
         };
-        this.gcce = new GCCEService(credentials, projectId);
-        this.gke = new container.v1.ClusterManagerClient(this.options);
+        try {
+            this.gcce = new GCCEService(credentials, projectId);
+            this.gke = new container.v1.ClusterManagerClient(this.options);
+        }
+        catch (e) {
+            throw `Couldn't connect to Google Cloud: ${e.message || e}`;
+        }
     }
 
     static from(params, settings){
