@@ -8,11 +8,10 @@ const containerApi = google.container('v1');
 
 module.exports = class GKEService{
     constructor({credentials, projectId}){
-        if (!credentials || !projectId) throw "Must provide credentials and project!";
+        if (!credentials) throw "Must provide credentials and project!";
         if (typeof credentials !== "object") throw "Credentials provided in a bad format";
-        this.options = {
-            credentials, projectId
-        };
+        this.options = {credentials};
+        if (projectId) this.options.projectId = projectId;
         try {
             this.gcce = new GCCEService(credentials, projectId);
             this.gke = new container.v1.ClusterManagerClient(this.options);
