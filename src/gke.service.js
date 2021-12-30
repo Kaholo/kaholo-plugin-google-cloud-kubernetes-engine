@@ -39,7 +39,7 @@ module.exports = class GKEService{
     async createBasicCluster(params){
         const {name:clusterName, locationType, region, zone, controlPlaneReleaseChannel, version, waitForOperation} = params;
         const isZonal = locationType === "Zonal";
-        if (!clusterName || !locationType || !version || !(isZonal && zone) || !(isZonal && region)){
+        if (!clusterName || !locationType || !version || (isZonal && !zone) || (!isZonal && !region)){
             throw "Didn't provide one of the required parameters!";
         }
         return this.createClusterJson({
