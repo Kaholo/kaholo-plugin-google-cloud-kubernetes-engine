@@ -40,7 +40,7 @@ module.exports = class GKEService{
         const {name:clusterName, locationType, region, zone, controlPlaneReleaseChannel, version, waitForOperation} = params;
         const isZonal = locationType === "Zonal";
         if (!clusterName || !locationType || !version || (isZonal && !zone) || (!isZonal && !region)){
-            throw "Didn't provide one of the required parameters!";
+            throw "Name, Location Type, Version, and either zone or region are required parameters!";
         }
         return this.createClusterJson({
             clusterJson: removeUndefinedAndEmpty({
@@ -66,7 +66,7 @@ module.exports = class GKEService{
             machineType += `-${customMachineCpuCount}-${customMachineMem}`;
         }
         if (!nodePoolName || !numberOfNodes || !machineType || !diskType || !diskSize){
-            throw "Didn't provide one of the required parameters."
+            throw "Pool Name, Number of Nodes, Machine Type, Disk Type, and Disk Size are required parameters."
         }
         return removeUndefinedAndEmpty({
             "name": nodePoolName,
@@ -117,7 +117,7 @@ module.exports = class GKEService{
     }
     
     async createClusterJson({locationType, region, zone, clusterJson, waitForOperation}){
-        if (!clusterJson) throw "Didn't provide cluster parameters JSON!";
+        if (!clusterJson) throw "Didn't provide cluster parameters JSON document!";
         const isZonal = locationType === "Zonal";
         const operation = (await this.gke.createCluster({
             parent: this.getLocationAsParent({region, zone: isZonal ? zone : undefined}),
@@ -142,7 +142,7 @@ module.exports = class GKEService{
         if (!cluster) {
             throw "Must provide a cluster to create the node pool for.";
         }
-        if (!nodePoolJson) throw "Didn't provide Node Pool parameters JSON!";
+        if (!nodePoolJson) throw "Didn't provide Node Pool parameters JSON document!";
         const parent = this.getClusterAsParent({region, zone, cluster});
         const operation = (await this.gke.createNodePool({
             clusterId: cluster,
@@ -167,7 +167,7 @@ module.exports = class GKEService{
     
     async deleteNodePool({region, zone, cluster, nodePool, waitForOperation}){
         if (!cluster || !nodePool) {
-            throw "Didn't provide one of the required parameters.";
+            throw "Cluster and Node Pool are required parameters.";
         }
         const parent = this.getClusterAsParent({region, zone, cluster});
         const operation = (await  this.gke.deleteNodePool({
