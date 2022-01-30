@@ -60,7 +60,7 @@
         },
         {
           "name": "name",
-          "viewName": "Name",
+          "viewName": "Name *",
           "required": false,
           "type": "string",
           "description": "Name of the new cluster.",
@@ -72,8 +72,8 @@
           "viewName": "Location Type",
           "required": false,
           "type": "options",
-          "description": "Regions are independent geographic areas that consist of zones. Zones and regions are logical abstractions of underlying physical resources provided in one or more physical data centers.",
-          "placeholder": "Zonal",
+          "description": "Whether to create a Regional or a Zonal (single-zone) cluster, Default is Zonal",
+          "placeholder": "select using drop-down",
           "learnUrl": "https://cloud.google.com/kubernetes-engine/docs/how-to/creating-a-zonal-cluster",
           "options": [
             {
@@ -88,23 +88,23 @@
         },
         {
           "name": "region",
-          "viewName": "Region *",
+          "viewName": "Region",
           "required": false,
           "type": "autocomplete",
           "autocompleteType": "function",
           "functionName": "listRegionsAuto",
-          "description": "Geographical GCP region where the new cluster will be located",
+          "description": "Geographical GCP region where the new cluster will be located, required if Location Type is Regional.",
           "placeholder": "us-east1",
           "learnUrl": "https://cloud.google.com/compute/docs/regions-zones"
         },
         {
           "name": "zone",
-          "viewName": "Zone *",
+          "viewName": "Zone",
           "required": false,
           "type": "autocomplete",
           "autocompleteType": "function",
           "functionName": "listZonesAuto",
-          "description": "Zone name.",
+          "description": "Zone is a subdivision of GCP regions, required if Location Type is Zonal.",
           "placeholder": "us-east1-c",
           "learnUrl": "https://cloud.google.com/compute/docs/regions-zones"
         },
@@ -113,8 +113,8 @@
           "viewName": "Control Plane Release Channel",
           "required": false,
           "type": "options",
-          "description": "Release channels offer the ability to balance between stability and the feature set of the version deployed in the cluster.",
-          "placeholder": "None - Static",
+          "description": "Release channels offer the ability to balance between stability and rapid adoption of new releases of Kubernetes. Default is Regular Channel.",
+          "placeholder": "select using drop-down",
           "learnUrl": "https://cloud.google.com/kubernetes-engine/docs/concepts/release-channels",
           "options": [
             {
@@ -137,16 +137,16 @@
         },
         {
           "name": "version",
-          "viewName": "Cluster Version",
+          "viewName": "Cluster Version *",
           "required": false,
           "type": "string",
           "description": "Initial cluster version.",
-          "placeholder": "1.21.5-gke.1302",
+          "placeholder": "1.21.6-gke.1500",
           "learnUrl": "https://cloud.google.com/kubernetes-engine/docs/release-notes"
         },
         {
           "name": "numberOfNodes",
-          "viewName": "Number Of Nodes",
+          "viewName": "Number Of Nodes *",
           "required": false,
           "type": "string",
           "description": "Null.",
@@ -182,7 +182,7 @@
         },
         {
           "name": "machineType",
-          "viewName": "Machine Type",
+          "viewName": "Machine Type *",
           "required": false,
           "type": "autocomplete",
           "autocompleteType": "function",
@@ -196,8 +196,8 @@
           "viewName": "Node Image Type",
           "required": false,
           "type": "options",
-          "description": "The type of node image to run on these nodes.",
-          "placeholder": "Ubuntu with Docker",
+          "description": "The type of container image to run on these nodes, Default is COS with Containerd",
+          "placeholder": "select using drop-down",
           "learnUrl": "https://cloud.google.com/kubernetes-engine/docs/concepts/node-images",
           "options": [
             {
@@ -236,9 +236,12 @@
         },
         {
           "name": "diskType",
-          "viewName": "Boot Disk Type",
+          "viewName": "Boot Disk Type, default is PD-Standard",
           "required": false,
           "type": "options",
+          "description": "Null.",
+          "placeholder": "select using drop-down",
+          "learnUrl": "https://cloud.google.com/compute/docs/disks",
           "options": [
             {
               "id": "pd-standard",
@@ -252,10 +255,7 @@
               "id": "pd-ssd",
               "name": "PD-SSD"
             }
-          ],
-          "description": "Null.",
-          "placeholder": "PD-Standard",
-          "learnUrl": "https://cloud.google.com/compute/docs/disks"
+          ]
         },
         {
           "name": "diskSize",
@@ -313,8 +313,8 @@
           "viewName": "Location Type",
           "required": false,
           "type": "options",
-          "description": "Whether to create a regional or a zonal cluster.",
-          "placeholder": "Zonal",
+          "description": "Whether to create a Regional or a Zonal (single-zone) cluster, Default is Zonal",
+          "placeholder": "select using drop-down",
           "learnUrl": "https://cloud.google.com/kubernetes-engine/docs/how-to/creating-a-zonal-cluster",
           "options": [
             {
@@ -345,7 +345,7 @@
           "type": "autocomplete",
           "autocompleteType": "function",
           "functionName": "listZonesAuto",
-          "description": "Zone name",
+          "description": "Zone is a subdivision of GCP regions, typically region-a, b, or c.",
           "placeholder": "us-east1-c",
           "learnUrl": "https://cloud.google.com/compute/docs/regions-zones"
         },
@@ -409,7 +409,7 @@
           "type": "autocomplete",
           "autocompleteType": "function",
           "functionName": "listZonesAuto",
-          "description": "The zone the cluster belongs to",
+          "description": "The zone where the cluster is located",
           "placeholder": "us-east1-c",
           "learnUrl": "https://cloud.google.com/compute/docs/regions-zones"
         },
@@ -530,8 +530,8 @@
           "viewName": "Node Image Type",
           "required": false,
           "type": "options",
-          "description": "Required memory for the VM instance in MB.",
-          "placeholder": "Ubuntu with Docker",
+          "description": "The type of container image to run on these nodes, Default is COS with Containerd",
+          "placeholder": "select using drop-down",
           "learnUrl": "https://cloud.google.com/kubernetes-engine/docs/concepts/node-images",
           "options": [
             {
@@ -573,6 +573,9 @@
           "viewName": "Boot Disk Type",
           "required": false,
           "type": "options",
+          "description": "Boot disk type for each node in the pool, PD-Standard is default",
+          "placeholder": "select using drop-down",
+          "learnUrl": "https://cloud.google.com/compute/docs/disks",
           "options": [
             {
               "id": "pd-standard",
@@ -586,10 +589,7 @@
               "id": "pd-ssd",
               "name": "PD-SSD"
             }
-          ],
-          "description": "Boot disk type for each node in the pool.",
-          "placeholder": "PD-Standard",
-          "learnUrl": "https://cloud.google.com/compute/docs/disks"
+          ]
         },
         {
           "name": "diskSize",
@@ -652,6 +652,9 @@
           "viewName": "Service Account Access Scopes",
           "required": false,
           "type": "options",
+          "description": ".NULL",
+          "placeholder": "select using drop-down",
+          "learnUrl": "https://cloud.google.com/compute/docs/access/create-enable-service-accounts-for-instances",
           "options": [
             {
               "id": "default",
@@ -661,10 +664,7 @@
               "id": "full",
               "name": "Allow full access to all Cloud APIs"
             }
-          ],
-          "description": ".NULL",
-          "placeholder": "Allow default access | Allow full access to all Cloud API",
-          "learnUrl": "https://cloud.google.com/compute/docs/access/create-enable-service-accounts-for-instances"
+          ]
         },
         {
           "name": "enableIntegrityMonitoring",
@@ -753,7 +753,7 @@
           "type": "autocomplete",
           "autocompleteType": "function",
           "functionName": "listZonesAuto",
-          "description": "The zone the cluster belongs to",
+          "description": "The zone where the cluster is located",
           "placeholder": "us-east1-c",
           "learnUrl": "https://cloud.google.com/compute/docs/regions-zones"
         },
@@ -828,7 +828,7 @@
           "type": "autocomplete",
           "autocompleteType": "function",
           "functionName": "listZonesAuto",
-          "description": "The zone the cluster belongs to",
+          "description": "The zone where the cluster is located",
           "placeholder": "us-east1-c",
           "learnUrl": "https://cloud.google.com/compute/docs/regions-zones"
         },
@@ -894,7 +894,7 @@
           "type": "autocomplete",
           "autocompleteType": "function",
           "functionName": "listZonesAuto",
-          "description": "The zone the cluster belongs to",
+          "description": "The zone where the cluster is located",
           "placeholder": "us-east1-c",
           "learnUrl": "https://cloud.google.com/compute/docs/regions-zones"
         },
@@ -971,7 +971,7 @@
           "type": "autocomplete",
           "autocompleteType": "function",
           "functionName": "listZonesAuto",
-          "description": "The zone the cluster belongs to",
+          "description": "The zone where the cluster is located",
           "placeholder": "us-east1-c",
           "learnUrl": "https://cloud.google.com/compute/docs/regions-zones"
         },
@@ -1076,7 +1076,7 @@
           "type": "autocomplete",
           "autocompleteType": "function",
           "functionName": "listZonesAuto",
-          "description": "The zone the cluster belongs to",
+          "description": "The zone where the cluster is located",
           "placeholder": "us-east1-c",
           "learnUrl": "https://cloud.google.com/compute/docs/regions-zones"
         },
