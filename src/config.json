@@ -236,10 +236,10 @@
         },
         {
           "name": "diskType",
-          "viewName": "Boot Disk Type, default is PD-Standard",
+          "viewName": "Boot Disk Type",
           "required": false,
           "type": "options",
-          "description": "Null.",
+          "description": "Boot disk type for each node in the pool, PD-Standard is default",
           "placeholder": "select using drop-down",
           "learnUrl": "https://cloud.google.com/compute/docs/disks",
           "options": [
@@ -259,7 +259,7 @@
         },
         {
           "name": "diskSize",
-          "viewName": "Boot Disk Size(In GB)",
+          "viewName": "Boot Disk Size (GB)",
           "required": false,
           "type": "string",
           "description": "The size in GB for the boot disk of each node in the pool",
