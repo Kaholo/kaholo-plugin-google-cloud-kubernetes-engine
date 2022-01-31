@@ -901,6 +901,59 @@
       ]
     },
     {
+      "name": "describeClusterCredentials",
+      "viewName": "Describe Cluster Credentials",
+      "params": [
+        {
+          "name": "creds",
+          "viewName": "Service Account Credentials",
+          "type": "vault",
+          "description": "Service account credentials.",
+          "learnUrl": "https://cloud.google.com/docs/authentication/production"
+        },
+        {
+          "name": "project",
+          "viewName": "Project",
+          "type": "autocomplete",
+          "autocompleteType": "function",
+          "functionName": "listProjectsAuto",
+          "description": "Project name.",
+          "placeholder": "project-name-username",
+          "learnUrl": "https://cloud.google.com/resource-manager/docs/creating-managing-projects"
+        },
+        {
+          "name": "region",
+          "viewName": "Region",
+          "type": "autocomplete",
+          "autocompleteType": "function",
+          "functionName": "listRegionsAuto",
+          "description": "The region the cluster belongs to.",
+          "placeholder": "us-east1",
+          "learnUrl": "https://cloud.google.com/compute/docs/regions-zones"
+        },
+        {
+          "name": "zone",
+          "viewName": "Zone",
+          "type": "autocomplete",
+          "autocompleteType": "function",
+          "functionName": "listZonesAuto",
+          "description": "The zone the cluster belongs to",
+          "placeholder": "us-east1-c",
+          "learnUrl": "https://cloud.google.com/compute/docs/regions-zones"
+        },
+        {
+          "name": "cluster",
+          "viewName": "Cluster",
+          "type": "autocomplete",
+          "autocompleteType": "function",
+          "functionName": "listClustersAuto",
+          "description": "Google Kubernetes Engine (GKE) provides a managed environment for deploying, managing, and scaling your containerized applications using Google infrastructure. The GKE environment consists of multiple machines (specifically, Compute Engine instances) grouped together to form a cluster.",
+          "placeholder": "my-cluster",
+          "learnUrl": "https://cloud.google.com/kubernetes-engine/docs/concepts/cluster-architecture"
+        }
+      ]
+    },
+    {
       "name": "listClusters",
       "viewName": "List Clusters",
       "params": [
