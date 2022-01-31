@@ -38,8 +38,8 @@ async function createClusterJson(action, settings){
 }
 
 async function createNodePool(action, settings){
-    const { region, zone, cluster, name, numberOfNodes, enableAutoscaling, minNode, maxNode, maxSurge, maxUnavailable, machineType, customMachineCpuCount, customMachineMem, nodeImage, diskType, diskSize, 
-        diskEncryptionKey, preemptible, maxPodsPerNode, networkTags, serviceAccount, saAccessScopes, enableIntegrityMonitoring, 
+    const { region, zone, cluster, name, numberOfNodes, enableAutoscaling, minNode, maxNode, maxSurge, maxUnavailable, machineType, customMachineCpuCount, customMachineMem, nodeImage, diskType, diskSize,
+        diskEncryptionKey, preemptible, maxPodsPerNode, networkTags, serviceAccount, saAccessScopes, enableIntegrityMonitoring,
         enableSecureBoot, labels, gceInstanceMetadata, version , waitForOperation} = action.params;
     const client = GKEService.from(action.params, settings);
     return client.createNodePool({
@@ -136,7 +136,23 @@ async function listNodePools(action, settings){
         zone: parsers.autocomplete(zone),
         cluster: parsers.autocomplete(cluster)
     });
-} 
+}
+
+async function describeClusterCredentials(action, settings){
+    const { region, zone, cluster } = action.params;
+    const client = GKEService.from(action.params, settings);
+    var describedCluster = await client.describeCluster({
+        region: parsers.autocomplete(region),
+        zone: parsers.autocomplete(zone),
+        cluster: parsers.autocomplete(cluster)
+    });
+
+    return clusterCredentials = {
+        certificateAuthority: describedCluster.masterAuth.clusterCaCertificate,
+        endpoint: describedCluster.endpoint,
+        accessToken: await client.gke.auth.getAccessToken()
+    }
+}
 
 module.exports = {
     createBasicCluster,
@@ -146,6 +162,7 @@ module.exports = {
 	deleteCluster,
 	deleteNodePool,
 	describeCluster,
+    describeClusterCredentials,
 	listClusters,
 	listNodePools,
     // Autocomplete Functions
