@@ -1,6 +1,6 @@
 {
 	"name": "kaholo-plugin-google-cloud-kubernetes-engine",
-	"version": "1.0.0",
+	"version": "1.0.6",
 	"description": "Kaholo plugin for integration with Google Cloud Kubernetes Engine(GKE).",
 	"main": "app.js",
 	"scripts": {
