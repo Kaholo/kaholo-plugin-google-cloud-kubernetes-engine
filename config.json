@@ -5,26 +5,42 @@
   "execProgram": "node",
   "main": "app.js",
   "imgUrl": "logo.png",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "Kaholo plugin for integration with Google Cloud Kubernetes Engine(GKE).",
   "category": ["CLOUD", "CONTAINERS"],
-  "keywords": ["GCP", "kubernetes", "k8", "gke", "google", "run", "google", "platform", "vm", "instance", "cloud", "cluster", "project", "infra", "infrastructure", "cli", "network", "subnetwork", "firewall", "IP", "route", "storage"],
+  "keywords": ["GCP", "kubernetes", "k8s", "gke", "google", "container", "pod", "node", "pool", "cloud", "cluster", "docker", "deployment"],
   "settings": [
     {
       "name": "creds",
-      "viewName": "Service Account Credentials",
+      "viewName": "Default Service Account Credentials",
       "type": "vault",
-      "description": "Default service account credentials",
+      "description": "Vaulted JSON document containing service account credentials as provided by GCP",
       "learnUrl": "https://cloud.google.com/docs/authentication/production"
     },
     {
       "name": "project",
       "viewName": "Default Project ID",
       "type": "string",
-      "description": "The ID of the default project to send requests to.",
-      "placeholder": "my-project",
+      "description": "GCP Project defines how your app interacts with services and resources",
+      "placeholder": "project-alpha",
       "learnUrl": "https://cloud.google.com/resource-manager/docs/creating-managing-projects"
+    },
+    {
+      "name": "region",
+      "viewName": "Default Region",
+      "type": "string",
+      "description": "Geographical GCP region where infrastructure is or will be located",
+      "placeholder": "select using autocomplete",
+      "learnUrl": "https://cloud.google.com/compute/docs/regions-zones"
+    },
+    {
+      "name": "waitForOperation",
+      "viewName": "Default Wait For Operation End",
+      "type": "boolean",
+      "description": "Wait until the operation is completed before moving onto the next Action in the pipeline.",
+      "learnUrl": "https://github.com/Kaholo/kaholo-plugin-google-cloud-kubernetes-engine"
     }
+
   ],
   "methods": [
     {
@@ -33,36 +49,40 @@
       "params": [
         {
           "name": "creds",
-          "viewName": "Service Account Credentials",
+          "viewName": "Service Account Credentials *",
+          "required": false,
           "type": "vault",
-          "description": "Service account credentials.",
+          "description": "Vaulted JSON document containing service account credentials as provided by GCP",
           "learnUrl": "https://cloud.google.com/docs/authentication/production"
         },
         {
           "name": "project",
-          "viewName": "Project",
+          "viewName": "Project *",
+          "required": false,
           "type": "autocomplete",
           "autocompleteType": "function",
           "functionName": "listProjectsAuto",
-          "description": "Project name.",
-          "placeholder": "project-name-username",
+          "description": "GCP Project defines how your app interacts with services and resources",
+          "placeholder": "select using autocomplete",
           "learnUrl": "https://cloud.google.com/resource-manager/docs/creating-managing-projects"
         },
         {
           "name": "name",
-          "viewName": "Name",
+          "viewName": "Name *",
+          "required": false,
           "type": "string",
-          "description": "Name of the new cluster.",
-          "placeholder": "clutserName",
+          "description": "A name for the new cluster",
+          "placeholder": "dev-alpha-two",
           "learnUrl": "https://cloud.google.com/kubernetes-engine/docs/how-to/creating-a-zonal-cluster"
         },
         {
           "name": "locationType",
-          "viewName": "Location Type",
+          "viewName": "Location Type *",
+          "required": false,
           "type": "options",
-          "description": "Regions are independent geographic areas that consist of zones. Zones and regions are logical abstractions of underlying physical resources provided in one or more physical data centers.",
-          "placeholder": "Zonal",
-          "learnUrl": "https://cloud.google.com/kubernetes-engine/docs/how-to/creating-a-zonal-cluster",
+          "description": "Zonal - a single control plan in a single zone. Regional - has control planes across zones in the region for high availability.",
+          "placeholder": "select using drop-down",
+          "learnUrl": "https://cloud.google.com/kubernetes-engine/docs/concepts/types-of-clusters",
           "options": [
             {
               "id": "Zonal",
@@ -77,29 +97,32 @@
         {
           "name": "region",
           "viewName": "Region",
+          "required": false,
           "type": "autocomplete",
           "autocompleteType": "function",
           "functionName": "listRegionsAuto",
-          "description": "Region name.",
-          "placeholder": "us-east1",
+          "description": "Geographical GCP region where the cluster will be located",
+          "placeholder": "select using autocomplete",
           "learnUrl": "https://cloud.google.com/compute/docs/regions-zones"
         },
         {
           "name": "zone",
           "viewName": "Zone",
+          "required": false,
           "type": "autocomplete",
           "autocompleteType": "function",
           "functionName": "listZonesAuto",
-          "description": "Zone name.",
-          "placeholder": "us-east1-c",
+          "description": "Zone is a subdivision of GCP regions, typically region-a, b, or c. Required only for Zonal cluster types.",
+          "placeholder": "select using autocomplete",
           "learnUrl": "https://cloud.google.com/compute/docs/regions-zones"
         },
         {
           "name": "controlPlaneReleaseChannel",
-          "viewName": "Control Plane Release Channel",
+          "viewName": "Control Plane Release Channel *",
+          "required": false,
           "type": "options",
-          "description": "Release channels offer the ability to balance between stability and the feature set of the version deployed in the cluster.",
-          "placeholder": "None - Static",
+          "description": "Kubernetes releases updates often, to deliver security updates, fix known issues, and introduce new features. Release channels determine the frequency and extent of updates to your cluster.",
+          "placeholder": "select using drop-down",
           "learnUrl": "https://cloud.google.com/kubernetes-engine/docs/concepts/release-channels",
           "options": [
             {
@@ -122,60 +145,66 @@
         },
         {
           "name": "version",
-          "viewName": "Cluster Version",
+          "viewName": "Cluster Version *",
+          "required": false,
           "type": "string",
           "description": "Initial cluster version.",
-          "placeholder": "1.21.5-gke.1302",
+          "placeholder": "1.21.6",
           "learnUrl": "https://cloud.google.com/kubernetes-engine/docs/release-notes"
         },
         {
           "name": "numberOfNodes",
-          "viewName": "Number Of Nodes",
+          "viewName": "Number Of Nodes *",
+          "required": false,
           "type": "string",
-          "description": "Null.",
+          "description": "The number of running nodes for the default node pool",
           "placeholder": "3",
           "learnUrl": "https://cloud.google.com/kubernetes-engine/docs/concepts/node-pools"
         },
         {
           "name": "enableAutoscaling",
           "viewName": "Enable Autoscaling",
+          "required": false,
           "type": "boolean",
-          "description": "Automatically resize the number of nodes in a given node pool, based on the demands of your workloads.",
-          "learnUrl": "https://cloud.google.com/kubernetes-engine/docs/concepts/cluster-autoscaler",
-          "placeholder": "Disable / Enable"
+          "description": "Autoscaling increases or decreases the number of nodes, based on the demands of your workloads.",
+          "learnUrl": "https://cloud.google.com/kubernetes-engine/docs/concepts/cluster-autoscaler"
         },
         {
           "name": "minNode",
           "viewName": "Minimum Number Of Nodes",
+          "required": false,
           "type": "string",
-          "placeholder": "0",
-          "description": "The number of nodes in the given node pool to partake in the workload.",
+          "placeholder": "1",
+          "description": "The minimum number of nodes the autoscaling should always keep runnning",
           "learnUrl": "https://cloud.google.com/kubernetes-engine/docs/concepts/cluster-autoscaler"
         },
         {
           "name": "maxNode",
           "viewName": "Maximum Number Of Nodes",
+          "required": false,
           "type": "string",
           "placeholder": "3",
-          "description": "For Autoscaling. Maximum number of nodes in the cluster's node pool.",
+          "description": "The maximum number of nodes the autoscaling should run when under high load",
           "learnUrl": "https://cloud.google.com/kubernetes-engine/docs/concepts/cluster-autoscaler"
         },
         {
           "name": "machineType",
-          "viewName": "Machine Type",
+          "viewName": "Machine Type *",
+          "required": false,
           "type": "autocomplete",
           "autocompleteType": "function",
           "functionName": "listMachineTypesAuto",
-          "description": "Every machine family has predefined machine shapes that have a specific vCPU to memory ratio that fits a variety of workload needs. If a predefined machine type does not meet your needs, you can create a custom machine for any general-purpose VM.",
-          "placeholder": "Custom N1",
+          "description": "Machine Type determines type/quantity of vCPU, RAM, other features, and price",
+          "placeholder": "select using autocomplete",
           "learnUrl": "https://cloud.google.com/compute/docs/machine-types"
         },
         {
           "name": "nodeImage",
           "viewName": "Node Image Type",
+          "required": false,
           "type": "options",
-          "description": "The type of node image to run on these nodes.",
-          "placeholder": "Ubuntu with Docker",
+          "description": "The operating system image that runs on each node",
+          "placeholder": "select using drop-down",
           "learnUrl": "https://cloud.google.com/kubernetes-engine/docs/concepts/node-images",
           "options": [
             {
@@ -214,7 +243,8 @@
         },
         {
           "name": "diskType",
-          "viewName": "Boot Disk Type",
+          "viewName": "Boot Disk Type *",
+          "required": false,
           "type": "options",
           "options": [
             {
@@ -230,13 +260,14 @@
               "name": "PD-SSD"
             }
           ],
-          "description": "Null.",
-          "placeholder": "PD-Standard",
+          "description": "Each disk type option has unique price and performance characteristics.",
+          "placeholder": "select using drop-down",
           "learnUrl": "https://cloud.google.com/compute/docs/disks"
         },
         {
           "name": "diskSize",
-          "viewName": "Boot Disk Size(In GB)",
+          "viewName": "Boot Disk Size (GB) *",
+          "required": false,
           "type": "string",
           "description": "The size in GB for the boot disk of each node in the pool",
           "placeholder": "10",
@@ -245,16 +276,18 @@
         {
           "name": "diskEncryptionKey",
           "viewName": "Boot Disk Encryption Key",
+          "required": false,
           "type": "string",
-          "description": "Boot Disk Encryption- The process of encrypting all data on the bootable media of a. system, the media responsible for starting the operating system. Ciphertext - Information that has been encrypted, making it unreadable without knowledge.",
-          "placeholder": "my-key",
+          "description": "Google manages encryption of customer data by default. To control and manage encryption key rotation yourself using CMEK, provide a key name here.",
+          "placeholder": "my-cmek-key",
           "learnUrl": "https://cloud.google.com/kubernetes-engine/docs/how-to/using-cmek"
         },
         {
           "name": "waitForOperation",
           "viewName": "Wait For Operation End",
+          "required": false,
           "type": "boolean",
-          "description": "Waiting until the operation is completed before moving on to the next operation.",
+          "description": "Wait until the operation is completed before moving onto the next Action in the pipeline.",
           "learnUrl": "https://github.com/Kaholo/kaholo-plugin-google-cloud-kubernetes-engine"
         }
       ]
@@ -265,27 +298,30 @@
       "params": [
         {
           "name": "creds",
-          "viewName": "Service Account Credentials",
+          "viewName": "Service Account Credentials *",
+          "required": false,
           "type": "vault",
-          "description": "Service account credentials.",
+          "description": "Vaulted JSON document containing service account credentials as provided by GCP",
           "learnUrl": "https://cloud.google.com/docs/authentication/production"
         },
         {
           "name": "project",
-          "viewName": "Project",
+          "viewName": "Project *",
+          "required": false,
           "type": "autocomplete",
           "autocompleteType": "function",
           "functionName": "listProjectsAuto",
-          "description": "Project name.",
-          "placeholder": "project-name-username",
+          "description": "GCP Project defines how your app interacts with services and resources",
+          "placeholder": "select using autocomplete",
           "learnUrl": "https://cloud.google.com/resource-manager/docs/creating-managing-projects"
         },
         {
           "name": "locationType",
-          "viewName": "Location Type",
+          "viewName": "Location Type *",
+          "required": false,
           "type": "options",
-          "description": "Whether to create a regional or a zonal cluster.",
-          "placeholder": "Zonal",
+          "description": "Zonal - a single control plan in a single zone. Regional - has control planes across zones in the region for high availability.",
+          "placeholder": "select using drop-down",
           "learnUrl": "https://cloud.google.com/kubernetes-engine/docs/how-to/creating-a-zonal-cluster",
           "options": [
             {
@@ -301,36 +337,40 @@
         {
           "name": "region",
           "viewName": "Region",
+          "required": false,
           "type": "autocomplete",
           "autocompleteType": "function",
           "functionName": "listRegionsAuto",
-          "description": "Region name",
-          "placeholder": "us-east1",
+          "description": "Geographical GCP region where cluster will be located",
+          "placeholder": "select using autocomplete",
           "learnUrl": "https://cloud.google.com/compute/docs/regions-zones"
         },
         {
           "name": "zone",
           "viewName": "Zone",
+          "required": false,
           "type": "autocomplete",
           "autocompleteType": "function",
           "functionName": "listZonesAuto",
-          "description": "Zone name",
-          "placeholder": "us-east1-c",
+          "description": "Zone is a subdivision of GCP regions, typically region-a, b, or c. Required only for Zonal cluster types.",
+          "placeholder": "select using autocomplete",
           "learnUrl": "https://cloud.google.com/compute/docs/regions-zones"
         },
         {
           "name": "clusterJson",
-          "viewName": "Cluster JSON",
+          "viewName": "Cluster JSON *",
+          "required": false,
           "type": "text",
-          "description": "Google Kubernetes Engine (GKE) provides a managed environment for deploying, managing, and scaling your containerized applications using Google infrastructure. The GKE environment consists of multiple machines (specifically, Compute Engine instances) grouped together to form a cluster.",
-          "placeholder": "/home/example/cluster_01.json",
-          "learnUrl": "https://cloud.google.com/kubernetes-engine/docs/how-to/creating-a-zonal-cluster"
+          "description": "A JSON document describing the cluster to create. Can be declared in Code e.g. const mycluster = {\"name\": \"cluster-alpha\", ...} or a path to a JSON document on the Kaholo agent.",
+          "placeholder": "/home/node/cluster_01.json",
+          "learnUrl": "https://cloud.google.com/kubernetes-engine/docs/reference/rest/v1beta1/projects.locations.clusters?hl=en_US#Cluster"
         },
         {
           "name": "waitForOperation",
           "viewName": "Wait For Operation End",
+          "required": false,
           "type": "boolean",
-          "description": "Waiting until the operation is completed before moving on to the next operation.",
+          "description": "Wait until the operation is completed before moving onto the next Action in the pipeline.",
           "learnUrl": "https://github.com/Kaholo/kaholo-plugin-google-cloud-kubernetes-engine"
         }
       ]
@@ -341,102 +381,113 @@
       "params": [
         {
           "name": "creds",
-          "viewName": "Service Account Credentials",
+          "viewName": "Service Account Credentials *",
+          "required": false,
           "type": "vault",
-          "description": "Service account credentials.",
+          "description": "Vaulted JSON document containing service account credentials as provided by GCP",
           "learnUrl": "https://cloud.google.com/docs/authentication/production"
         },
         {
           "name": "project",
-          "viewName": "Project",
+          "viewName": "Project *",
+          "required": false,
           "type": "autocomplete",
           "autocompleteType": "function",
           "functionName": "listProjectsAuto",
-          "description": "Project name.",
-          "placeholder": "project-name-username",
+          "description": "GCP Project defines how your app interacts with services and resources",
+          "placeholder": "select using autocomplete",
           "learnUrl": "https://cloud.google.com/resource-manager/docs/creating-managing-projects"
         },
         {
           "name": "region",
           "viewName": "Region",
+          "required": false,
           "type": "autocomplete",
           "autocompleteType": "function",
           "functionName": "listRegionsAuto",
-          "description": "The region the cluster belongs to.",
-          "placeholder": "us-east1",
+          "description": "Geographical GCP region where node pool will be located",
+          "placeholder": "select using autocomplete",
           "learnUrl": "https://cloud.google.com/compute/docs/regions-zones"
         },
         {
           "name": "zone",
           "viewName": "Zone",
+          "required": false,
           "type": "autocomplete",
           "autocompleteType": "function",
           "functionName": "listZonesAuto",
-          "description": "The zone the cluster belongs to",
-          "placeholder": "us-east1-c",
+          "description": "Zone is a subdivision of GCP regions, typically region-a, b, or c",
+          "placeholder": "select using autocomplete",
           "learnUrl": "https://cloud.google.com/compute/docs/regions-zones"
         },
         {
           "name": "cluster",
-          "viewName": "Cluster",
+          "viewName": "Cluster *",
+          "required": false,
           "type": "autocomplete",
           "autocompleteType": "function",
           "functionName": "listClustersAuto",
-          "description": "Google Kubernetes Engine (GKE) provides a managed environment for deploying, managing, and scaling your containerized applications using Google infrastructure. The GKE environment consists of multiple machines (specifically, Compute Engine instances) grouped together to form a cluster.",
-          "placeholder": "my-cluster",
+          "description": "The cluster to which to the node pool will be added",
+          "placeholder": "select using autocomplete",
           "learnUrl": "https://cloud.google.com/kubernetes-engine/docs/concepts/cluster-architecture"
         },
         {
           "name": "version",
-          "viewName": "Cluster Version",
+          "viewName": "Cluster Version *",
+          "required": false,
           "type": "string",
-          "description": "Version of the cluster.",
-          "placeholder": "1.21.5-gke.1302",
+          "description": "Initial cluster version. Leave blank to use current version.",
+          "placeholder": "1.21.6",
           "learnUrl": "https://cloud.google.com/kubernetes-engine/docs/release-notes"
         },
         {
           "name": "name",
-          "viewName": "Pool Name",
+          "viewName": "Pool Name *",
+          "required": false,
           "type": "string",
-          "description": "Node name to create.",
-          "placeholder": "default-node-pool",
+          "description": "A name for the new node pool",
+          "placeholder": "dev-pool-bravo",
           "learnUrl": "https://cloud.google.com/kubernetes-engine/docs/concepts/node-pools"
         },
         {
           "name": "numberOfNodes",
-          "viewName": "Number Of Nodes",
+          "viewName": "Number Of Nodes *",
+          "required": false,
           "type": "string",
-          "description": "Number of nodes to create.",
+          "description": "The number of running nodes for this node pool",
           "placeholder": "3",
           "learnUrl": "https://cloud.google.com/kubernetes-engine/docs/concepts/node-pools"
         },
         {
           "name": "enableAutoscaling",
           "viewName": "Enable Autoscaling",
+          "required": false,
           "type": "boolean",
           "description": "Automatically resize the number of nodes in a given node pool, based on the demands of your workloads.",
-          "learnUrl": "https://cloud.google.com/kubernetes-engine/docs/concepts/cluster-autoscaler",
-          "placeholder": "Disable / Enable"
+          "learnUrl": "https://cloud.google.com/kubernetes-engine/docs/concepts/cluster-autoscaler"
         },
         {
           "name": "minNode",
           "viewName": "Minimum Number Of Nodes",
+          "required": false,
           "type": "string",
-          "placeholder": "0",
-          "description": "The number of nodes in the given node pool to partake in the workload.",
+          "placeholder": "1",
+          "description": "The minimum number of nodes the autoscaling should always keep runnning",
           "learnUrl": "https://cloud.google.com/kubernetes-engine/docs/concepts/cluster-autoscaler"
         },
         {
           "name": "maxNode",
           "viewName": "Maximum Number Of Nodes",
+          "required": false,
           "type": "string",
           "placeholder": "3",
-          "description": "The number of nodes in the given node pool to partake in the workload.",
+          "description": "The maximum number of nodes the autoscaling should run when under high load",
           "learnUrl": "https://cloud.google.com/kubernetes-engine/docs/concepts/cluster-autoscaler"
         },
         {
           "name": "maxSurge",
           "viewName": "Max Surge",
+          "required": false,
           "type": "string",
           "placeholder": "1",
           "description": "Surge upgrades let you control the number of nodes GKE can upgrade at a time and control how disruptive upgrades are to your workloads.",
@@ -445,6 +496,7 @@
         {
           "name": "maxUnavailable",
           "viewName": "Max Unavailable",
+          "required": false,
           "type": "string",
           "placeholder": "0",
           "description": "Number of nodes that can be simultaneously unavailable during an upgrade.",
@@ -452,17 +504,19 @@
         },
         {
           "name": "machineType",
-          "viewName": "Machine Type",
+          "viewName": "Machine Type *",
+          "required": false,
           "type": "autocomplete",
           "autocompleteType": "function",
           "functionName": "listMachineTypesWithCustomAuto",
-          "description": "Machine type for all nodes in the pool.",
-          "placeholder": "Custom N1",
+          "description": "Machine Type determines type/quantity of vCPU, RAM, other features, and price",
+          "placeholder": "select using autocomplete",
           "learnUrl": "https://cloud.google.com/compute/docs/machine-types"
         },
         {
           "name": "customMachineCpuCount",
           "viewName": "Custom Machine CPU Count",
+          "required": false,
           "type": "string",
           "description": "Required CPUs for the VM instance.",
           "placeholder": "2",
@@ -471,6 +525,7 @@
         {
           "name": "customMachineMem",
           "viewName": "Custom Machine Memory(In MB)",
+          "required": false,
           "type": "string",
           "description": "When using custom nachine type, the size of the memory for the machine",
           "placeholder": "1024",
@@ -479,9 +534,10 @@
         {
           "name": "nodeImage",
           "viewName": "Node Image Type",
+          "required": false,
           "type": "options",
-          "description": "Required memory for the VM instance in MB.",
-          "placeholder": "Ubuntu with Docker",
+          "description": "The operating system image that runs on each node",
+          "placeholder": "select using drop-down",
           "learnUrl": "https://cloud.google.com/kubernetes-engine/docs/concepts/node-images",
           "options": [
             {
@@ -520,7 +576,8 @@
         },
         {
           "name": "diskType",
-          "viewName": "Boot Disk Type",
+          "viewName": "Boot Disk Type *",
+          "required": false,
           "type": "options",
           "options": [
             {
@@ -536,13 +593,14 @@
               "name": "PD-SSD"
             }
           ],
-          "description": "Boot disk type for each node in the pool.",
-          "placeholder": "PD-Standard",
+          "description": "Each disk type option has unique price and performance characteristics.",
+          "placeholder": "select using drop-down",
           "learnUrl": "https://cloud.google.com/compute/docs/disks"
         },
         {
           "name": "diskSize",
-          "viewName": "Boot Disk Size(In GB)",
+          "viewName": "Boot Disk Size (GB) *",
+          "required": false,
           "type": "string",
           "description": "The size in GB for the boot disk of each node in the pool",
           "placeholder": "10",
@@ -551,22 +609,24 @@
         {
           "name": "diskEncryptionKey",
           "viewName": "Boot Disk Encryption Key",
+          "required": false,
           "type": "string",
-          "description": "Boot Disk Encryption- The process of encrypting all data on the bootable media of a. system, the media responsible for starting the operating system. Ciphertext - Information that has been encrypted, making it unreadable without knowledge.",
-          "placeholder": "my-key",
+          "description": "Google manages encryption of customer data by default. To control and manage encryption key rotation yourself using CMEK, provide a key name here.",
+          "placeholder": "my-cmek-key",
           "learnUrl": "https://cloud.google.com/kubernetes-engine/docs/how-to/using-cmek"
         },
         {
           "name": "preemptible",
           "viewName": "Enable Preemptible Nodes",
+          "required": false,
           "type": "boolean",
           "description": "An instance that can be purchased for a steep discount which will terminate the instance after 24 hours.",
-          "learnUrl": "https://cloud.google.com/kubernetes-engine/docs/how-to/preemptible-vms",
-          "placeholder": "True/False"
+          "learnUrl": "https://cloud.google.com/kubernetes-engine/docs/how-to/preemptible-vms"
         },
         {
           "name": "maxPodsPerNode",
           "viewName": "Maximum Pods Per Node",
+          "required": false,
           "type": "string",
           "description": "The value is used to optimize the partitioning of cluster's IP address range to sub-ranges at node level.",
           "placeholder": "110",
@@ -575,6 +635,7 @@
         {
           "name": "networkTags",
           "viewName": "Network Tags",
+          "required": false,
           "type": "text",
           "description": "Tags represent firewall rules applied to each node.",
           "placeholder": "example-tag",
@@ -583,16 +644,18 @@
         {
           "name": "serviceAccount",
           "viewName": "API Access Service Account",
+          "required": false,
           "type": "autocomplete",
           "autocompleteType": "function",
           "functionName": "listServiceAccountsAuto",
           "description": "API access service account.",
-          "placeholder": "username_1",
+          "placeholder": "select using autocomplete",
           "learnUrl": "https://cloud.google.com/iam/docs/service-accounts"
         },
         {
           "name": "saAccessScopes",
           "viewName": "Service Account Access Scopes",
+          "required": false,
           "type": "options",
           "options": [
             {
@@ -604,29 +667,30 @@
               "name": "Allow full access to all Cloud APIs"
             }
           ],
-          "description": ".NULL",
-          "placeholder": "Allow default access | Allow full access to all Cloud API",
+          "description": "Level of security access to the node pool to grant for the service account",
+          "placeholder": "select using drop-down",
           "learnUrl": "https://cloud.google.com/compute/docs/access/create-enable-service-accounts-for-instances"
         },
         {
           "name": "enableIntegrityMonitoring",
           "viewName": "Enable Integrity Monitoring",
+          "required": false,
           "type": "boolean",
           "description": "Integrity monitoring is a node pool setting that's enabled by default on GKE.",
-          "learnUrl": "https://cloud.google.com/kubernetes-engine/docs/how-to/shielded-gke-nodes",
-          "placeholder": ""
+          "learnUrl": "https://cloud.google.com/kubernetes-engine/docs/how-to/shielded-gke-nodes"
         },
         {
           "name": "enableSecureBoot",
           "viewName": "Enable Secure Boot",
+          "required": false,
           "type": "boolean",
           "description": "Secure boot helps protect your nodes against boot-level and kernel-level malware and rootkits.",
-          "learnUrl": "https://github.com/Kaholo/kaholo-plugin-google-cloud-kubernetes",
-          "placeholder": "Disable / Enable"
+          "learnUrl": "https://github.com/Kaholo/kaholo-plugin-google-cloud-kubernetes"
         },
         {
           "name": "labels",
           "viewName": "Kubernetes Labels",
+          "required": false,
           "type": "text",
           "description": "Kubernetes labels to add.",
           "placeholder": "example-label=Example Value\nexample-key-only-label",
@@ -635,6 +699,7 @@
         {
           "name": "gceInstanceMetadata",
           "viewName": "GCE Instance Metadata",
+          "required": false,
           "type": "text",
           "description": "A Metadata server that knows details about your App Engine instance, such as its containing project ID, service accounts, and tokens used by the service accounts. You can access this data using simple HTTP requests: no client libraries are required.",
           "placeholder": "disable-legacy-endpoints=true",
@@ -643,8 +708,9 @@
         {
           "name": "waitForOperation",
           "viewName": "Wait For Operation End",
+          "required": false,
           "type": "boolean",
-          "description": "Waiting until the operation is completed before moving on to the next operation.",
+          "description": "Wait until the operation is completed before moving onto the next Action in the pipeline.",
           "learnUrl": "https://github.com/Kaholo/kaholo-plugin-google-cloud-kubernetes-engine"
         }
       ]
@@ -655,54 +721,60 @@
       "params": [
         {
           "name": "creds",
-          "viewName": "Service Account Credentials",
+          "viewName": "Service Account Credentials *",
+          "required": false,
           "type": "vault",
-          "description": "Service account credentials.",
+          "description": "Vaulted JSON document containing service account credentials as provided by GCP",
           "learnUrl": "https://cloud.google.com/docs/authentication/production"
         },
         {
           "name": "project",
-          "viewName": "Project",
+          "viewName": "Project *",
+          "required": false,
           "type": "autocomplete",
           "autocompleteType": "function",
           "functionName": "listProjectsAuto",
-          "description": "Project name.",
-          "placeholder": "project-name-username",
+          "description": "GCP Project defines how your app interacts with services and resources",
+          "placeholder": "select using autocomplete",
           "learnUrl": "https://cloud.google.com/resource-manager/docs/creating-managing-projects"
         },
         {
           "name": "region",
-          "viewName": "Region",
+          "viewName": "Region *",
+          "required": false,
           "type": "autocomplete",
           "autocompleteType": "function",
           "functionName": "listRegionsAuto",
-          "description": "The region the cluster belongs to.",
-          "placeholder": "us-east1",
+          "description": "Geographical GCP region where node pool will be located",
+          "placeholder": "select using autocomplete",
           "learnUrl": "https://cloud.google.com/compute/docs/regions-zones"
         },
         {
           "name": "zone",
           "viewName": "Zone",
+          "required": false,
           "type": "autocomplete",
           "autocompleteType": "function",
           "functionName": "listZonesAuto",
-          "description": "The zone the cluster belongs to",
-          "placeholder": "us-east1-c",
+          "description": "Zone is a subdivision of GCP regions, typically region-a, b, or c",
+          "placeholder": "select using autocomplete",
           "learnUrl": "https://cloud.google.com/compute/docs/regions-zones"
         },
         {
           "name": "cluster",
-          "viewName": "Cluster",
+          "viewName": "Cluster *",
+          "required": false,
           "type": "autocomplete",
           "autocompleteType": "function",
           "functionName": "listClustersAuto",
-          "description": "Google Kubernetes Engine (GKE) provides a managed environment for deploying, managing, and scaling your containerized applications using Google infrastructure. The GKE environment consists of multiple machines (specifically, Compute Engine instances) grouped together to form a cluster.",
-          "placeholder": "my-cluster",
+          "description": "The cluster to which to the node pool will be added",
+          "placeholder": "select using autocomplete",
           "learnUrl": "https://cloud.google.com/kubernetes-engine/docs/concepts/cluster-architecture"
         },
         {
           "name": "nodePoolJson",
-          "viewName": "Node Pool JSON",
+          "viewName": "Node Pool JSON *",
+          "required": false,
           "type": "text",
           "description": "Create the node pool according to the parameters specified in the provided JSON.",
           "placeholder": "/home/example/nodepool_01.json",
@@ -711,8 +783,9 @@
         {
           "name": "waitForOperation",
           "viewName": "Wait For Operation End",
+          "required": false,
           "type": "boolean",
-          "description": "Waiting until the operation is completed before moving on to the next operation.",
+          "description": "Wait until the operation is completed before moving onto the next Action in the pipeline.",
           "learnUrl": "https://github.com/Kaholo/kaholo-plugin-google-cloud-kubernetes-engine"
         }
       ]
@@ -723,56 +796,62 @@
       "params": [
         {
           "name": "creds",
-          "viewName": "Service Account Credentials",
+          "viewName": "Service Account Credentials *",
+          "required": false,
           "type": "vault",
-          "description": "Service account credentials.",
+          "description": "Vaulted JSON document containing service account credentials as provided by GCP",
           "learnUrl": "https://cloud.google.com/docs/authentication/production"
         },
         {
           "name": "project",
-          "viewName": "Project",
+          "viewName": "Project *",
+          "required": false,
           "type": "autocomplete",
           "autocompleteType": "function",
           "functionName": "listProjectsAuto",
-          "description": "Project name.",
-          "placeholder": "project-name-username",
+          "description": "GCP Project defines how your app interacts with services and resources",
+          "placeholder": "select using autocomplete",
           "learnUrl": "https://cloud.google.com/resource-manager/docs/creating-managing-projects"
         },
         {
           "name": "region",
-          "viewName": "Region",
+          "viewName": "Region *",
+          "required": false,
           "type": "autocomplete",
           "autocompleteType": "function",
           "functionName": "listRegionsAuto",
-          "description": "The region the cluster belongs to.",
-          "placeholder": "us-east1",
+          "description": "Geographical GCP region where cluster is located",
+          "placeholder": "select using autocomplete",
           "learnUrl": "https://cloud.google.com/compute/docs/regions-zones"
         },
         {
           "name": "zone",
           "viewName": "Zone",
+          "required": false,
           "type": "autocomplete",
           "autocompleteType": "function",
           "functionName": "listZonesAuto",
-          "description": "The zone the cluster belongs to",
-          "placeholder": "us-east1-c",
+          "description": "Zone is a subdivision of GCP regions, typically region-a, b, or c",
+          "placeholder": "select using autocomplete",
           "learnUrl": "https://cloud.google.com/compute/docs/regions-zones"
         },
         {
           "name": "cluster",
-          "viewName": "Cluster",
+          "viewName": "Cluster *",
+          "required": false,
           "type": "autocomplete",
           "autocompleteType": "function",
           "functionName": "listClustersAuto",
-          "description": "Google Kubernetes Engine (GKE) provides a managed environment for deploying, managing, and scaling your containerized applications using Google infrastructure. The GKE environment consists of multiple machines (specifically, Compute Engine instances) grouped together to form a cluster.",
-          "placeholder": "my-cluster",
+          "description": "The cluster to be deleted",
+          "placeholder": "select using autocomplete",
           "learnUrl": "https://cloud.google.com/kubernetes-engine/docs/concepts/cluster-architecture"
         },
         {
           "name": "waitForOperation",
           "viewName": "Wait For Operation End",
+          "required": false,
           "type": "boolean",
-          "description": "Waiting until the operation is completed before moving on to the next operation.",
+          "description": "Wait until the operation is completed before moving onto the next Action in the pipeline.",
           "learnUrl": "https://github.com/Kaholo/kaholo-plugin-google-cloud-kubernetes-engine"
         }
       ]
@@ -783,66 +862,73 @@
       "params": [
         {
           "name": "creds",
-          "viewName": "Service Account Credentials",
+          "viewName": "Service Account Credentials *",
+          "required": false,
           "type": "vault",
-          "description": "Service account credentials.",
+          "description": "Vaulted JSON document containing service account credentials as provided by GCP",
           "learnUrl": "https://cloud.google.com/docs/authentication/production"
         },
         {
           "name": "project",
-          "viewName": "Project",
+          "viewName": "Project *",
+          "required": false,
           "type": "autocomplete",
           "autocompleteType": "function",
           "functionName": "listProjectsAuto",
-          "description": "Project name.",
-          "placeholder": "project-name-username",
+          "description": "GCP Project defines how your app interacts with services and resources",
+          "placeholder": "select using autocomplete",
           "learnUrl": "https://cloud.google.com/resource-manager/docs/creating-managing-projects"
         },
         {
           "name": "region",
           "viewName": "Region",
+          "required": false,
           "type": "autocomplete",
           "autocompleteType": "function",
           "functionName": "listRegionsAuto",
-          "description": "The region the cluster belongs to.",
-          "placeholder": "us-east1",
+          "description": "Geographical GCP region where node pool is located",
+          "placeholder": "select using autocomplete",
           "learnUrl": "https://cloud.google.com/compute/docs/regions-zones"
         },
         {
           "name": "zone",
           "viewName": "Zone",
+          "required": false,
           "type": "autocomplete",
           "autocompleteType": "function",
           "functionName": "listZonesAuto",
-          "description": "The zone the cluster belongs to",
-          "placeholder": "us-east1-c",
+          "description": "Zone is a subdivision of GCP regions, typically region-a, b, or c",
+          "placeholder": "select using autocomplete",
           "learnUrl": "https://cloud.google.com/compute/docs/regions-zones"
         },
         {
           "name": "cluster",
-          "viewName": "Cluster",
+          "viewName": "Cluster *",
+          "required": false,
           "type": "autocomplete",
           "autocompleteType": "function",
           "functionName": "listClustersAuto",
-          "description": "Google Kubernetes Engine (GKE) provides a managed environment for deploying, managing, and scaling your containerized applications using Google infrastructure. The GKE environment consists of multiple machines (specifically, Compute Engine instances) grouped together to form a cluster.",
-          "placeholder": "my-cluster",
+          "description": "The cluster from which the node pool should be deleted",
+          "placeholder": "select using autocomplete",
           "learnUrl": "https://cloud.google.com/kubernetes-engine/docs/concepts/cluster-architecture"
         },
         {
           "name": "nodePool",
-          "viewName": "Node Pool",
+          "viewName": "Node Pool *",
+          "required": false,
           "type": "autocomplete",
           "autocompleteType": "function",
           "functionName": "listNodePoolsAuto",
-          "description": "Node name to delete.",
-          "placeholder": "node-pool-2",
+          "description": "Node pool to delete",
+          "placeholder": "select using autocomplete",
           "learnUrl": "https://cloud.google.com/kubernetes-engine/docs/concepts/node-pools"
         },
         {
           "name": "waitForOperation",
           "viewName": "Wait For Operation End",
+          "required": false,
           "type": "boolean",
-          "description": "Waiting until the operation is completed before moving on to the next operation.",
+          "description": "Wait until the operation is completed before moving onto the next Action in the pipeline.",
           "learnUrl": "https://github.com/Kaholo/kaholo-plugin-google-cloud-kubernetes-engine"
         }
       ]
@@ -853,9 +939,67 @@
       "params": [
         {
           "name": "creds",
+          "viewName": "Service Account Credentials *",
+          "required": false,
+          "type": "vault",
+          "description": "Vaulted JSON document containing service account credentials as provided by GCP",
+          "learnUrl": "https://cloud.google.com/docs/authentication/production"
+        },
+        {
+          "name": "project",
+          "viewName": "Project *",
+          "required": false,
+          "type": "autocomplete",
+          "autocompleteType": "function",
+          "functionName": "listProjectsAuto",
+          "description": "GCP Project defines how your app interacts with services and resources",
+          "placeholder": "select using autocomplete",
+          "learnUrl": "https://cloud.google.com/resource-manager/docs/creating-managing-projects"
+        },
+        {
+          "name": "region",
+          "viewName": "Region *",
+          "required": false,
+          "type": "autocomplete",
+          "autocompleteType": "function",
+          "functionName": "listRegionsAuto",
+          "description": "Geographical GCP region where cluster is located",
+          "placeholder": "select using autocomplete",
+          "learnUrl": "https://cloud.google.com/compute/docs/regions-zones"
+        },
+        {
+          "name": "zone",
+          "viewName": "Zone",
+          "required": false,
+          "type": "autocomplete",
+          "autocompleteType": "function",
+          "functionName": "listZonesAuto",
+          "description": "Zone is a subdivision of GCP regions, typically region-a, b, or c",
+          "placeholder": "select using autocomplete",
+          "learnUrl": "https://cloud.google.com/compute/docs/regions-zones"
+        },
+        {
+          "name": "cluster",
+          "viewName": "Cluster *",
+          "required": false,
+          "type": "autocomplete",
+          "autocompleteType": "function",
+          "functionName": "listClustersAuto",
+          "description": "The cluster to describe",
+          "placeholder": "select using autocomplete",
+          "learnUrl": "https://cloud.google.com/kubernetes-engine/docs/concepts/cluster-architecture"
+        }
+      ]
+    },
+    {
+      "name": "describeClusterCredentials",
+      "viewName": "Describe Cluster Credentials",
+      "params": [
+        {
+          "name": "creds",
           "viewName": "Service Account Credentials",
           "type": "vault",
-          "description": "Service account credentials.",
+          "description": "Vaulted JSON document containing service account credentials as provided by GCP",
           "learnUrl": "https://cloud.google.com/docs/authentication/production"
         },
         {
@@ -864,8 +1008,8 @@
           "type": "autocomplete",
           "autocompleteType": "function",
           "functionName": "listProjectsAuto",
-          "description": "Project name.",
-          "placeholder": "project-name-username",
+          "description": "GCP Project defines how your app interacts with services and resources",
+          "placeholder": "select using autocomplete",
           "learnUrl": "https://cloud.google.com/resource-manager/docs/creating-managing-projects"
         },
         {
@@ -874,8 +1018,8 @@
           "type": "autocomplete",
           "autocompleteType": "function",
           "functionName": "listRegionsAuto",
-          "description": "The region the cluster belongs to.",
-          "placeholder": "us-east1",
+          "description": "Geographical GCP region where clusters are located",
+          "placeholder": "select using autocomplete",
           "learnUrl": "https://cloud.google.com/compute/docs/regions-zones"
         },
         {
@@ -884,8 +1028,8 @@
           "type": "autocomplete",
           "autocompleteType": "function",
           "functionName": "listZonesAuto",
-          "description": "The zone the cluster belongs to",
-          "placeholder": "us-east1-c",
+          "description": "Zone is a subdivision of GCP regions, typically region-a, b, or c",
+          "placeholder": "select using autocomplete",
           "learnUrl": "https://cloud.google.com/compute/docs/regions-zones"
         },
         {
@@ -894,8 +1038,8 @@
           "type": "autocomplete",
           "autocompleteType": "function",
           "functionName": "listClustersAuto",
-          "description": "Google Kubernetes Engine (GKE) provides a managed environment for deploying, managing, and scaling your containerized applications using Google infrastructure. The GKE environment consists of multiple machines (specifically, Compute Engine instances) grouped together to form a cluster.",
-          "placeholder": "my-cluster",
+          "description": "The cluster for which credentials are to be described",
+          "placeholder": "select using autocomplete",
           "learnUrl": "https://cloud.google.com/kubernetes-engine/docs/concepts/cluster-architecture"
         }
       ]
@@ -906,39 +1050,43 @@
       "params": [
         {
           "name": "creds",
-          "viewName": "Service Account Credentials",
+          "viewName": "Service Account Credentials *",
+          "required": false,
           "type": "vault",
-          "description": "Service account credentials.",
+          "description": "Vaulted JSON document containing service account credentials as provided by GCP",
           "learnUrl": "https://cloud.google.com/docs/authentication/production"
         },
         {
           "name": "project",
-          "viewName": "Project",
+          "viewName": "Project *",
+          "required": false,
           "type": "autocomplete",
           "autocompleteType": "function",
           "functionName": "listProjectsAuto",
-          "description": "Project name.",
-          "placeholder": "project-name-username",
+          "description": "GCP Project defines how your app interacts with services and resources",
+          "placeholder": "select using autocomplete",
           "learnUrl": "https://cloud.google.com/resource-manager/docs/creating-managing-projects"
         },
         {
           "name": "region",
-          "viewName": "Region",
+          "viewName": "Region *",
+          "required": false,
           "type": "autocomplete",
           "autocompleteType": "function",
           "functionName": "listRegionsAuto",
-          "description": "The region the cluster belongs to.",
-          "placeholder": "us-east1",
+          "description": "Geographical GCP region where clusters are located",
+          "placeholder": "select using autocomplete",
           "learnUrl": "https://cloud.google.com/compute/docs/regions-zones"
         },
         {
           "name": "zone",
           "viewName": "Zone",
+          "required": false,
           "type": "autocomplete",
           "autocompleteType": "function",
           "functionName": "listZonesAuto",
-          "description": "The zone the cluster belongs to",
-          "placeholder": "us-east1-c",
+          "description": "Zone is a subdivision of GCP regions, typically region-a, b, or c",
+          "placeholder": "select using autocomplete",
           "learnUrl": "https://cloud.google.com/compute/docs/regions-zones"
         }
       ]
@@ -949,49 +1097,54 @@
       "params": [
         {
           "name": "creds",
-          "viewName": "Service Account Credentials",
+          "viewName": "Service Account Credentials *",
+          "required": false,
           "type": "vault",
-          "description": "Service account credentials.",
+          "description": "Vaulted JSON document containing service account credentials as provided by GCP",
           "learnUrl": "https://cloud.google.com/docs/authentication/production"
         },
         {
           "name": "project",
-          "viewName": "Project",
+          "viewName": "Project *",
+          "required": false,
           "type": "autocomplete",
           "autocompleteType": "function",
           "functionName": "listProjectsAuto",
-          "description": "Project name.",
-          "placeholder": "project-name-username",
+          "description": "GCP Project defines how your app interacts with services and resources",
+          "placeholder": "select using autocomplete",
           "learnUrl": "https://cloud.google.com/resource-manager/docs/creating-managing-projects"
         },
         {
           "name": "region",
           "viewName": "Region",
+          "required": false,
           "type": "autocomplete",
           "autocompleteType": "function",
           "functionName": "listRegionsAuto",
-          "description": "The region the cluster belongs to.",
-          "placeholder": "us-east1",
+          "description": "Geographical GCP region where node pools are located",
+          "placeholder": "select using autocomplete",
           "learnUrl": "https://cloud.google.com/compute/docs/regions-zones"
         },
         {
           "name": "zone",
           "viewName": "Zone",
+          "required": false,
           "type": "autocomplete",
           "autocompleteType": "function",
           "functionName": "listZonesAuto",
-          "description": "The zone the cluster belongs to",
-          "placeholder": "us-east1-c",
+          "description": "Zone is a subdivision of GCP regions, typically region-a, b, or c",
+          "placeholder": "select using autocomplete",
           "learnUrl": "https://cloud.google.com/compute/docs/regions-zones"
         },
         {
           "name": "cluster",
-          "viewName": "Cluster",
+          "viewName": "Cluster *",
+          "required": false,
           "type": "autocomplete",
           "autocompleteType": "function",
           "functionName": "listClustersAuto",
-          "description": "Google Kubernetes Engine (GKE) provides a managed environment for deploying, managing, and scaling your containerized applications using Google infrastructure. The GKE environment consists of multiple machines (specifically, Compute Engine instances) grouped together to form a cluster.",
-          "placeholder": "my-cluster",
+          "description": "The cluster containing the node pools to be listed",
+          "placeholder": "select using autocomplete",
           "learnUrl": "https://cloud.google.com/kubernetes-engine/docs/concepts/cluster-architecture"
         }
       ]
