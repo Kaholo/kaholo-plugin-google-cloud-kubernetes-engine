@@ -201,6 +201,21 @@ Describe the specified cluster.
 5. Cluster (Autocomplete) **Required** - The GKE cluster to describe.
 [Learn More](https://cloud.google.com/kubernetes-engine/docs/concepts/cluster-architecture)
 
+## Method: Describe Cluster Credentials
+Similar to Describe Cluster but returns the client credential to use in the runtime with [kubernetes plugin](https://github.com/Kaholo/kaholo-plugin-kubernetes).
+
+## Parameters
+1. Service Account Credentials (Vault) **Required if not in settings** - Service account credentials
+[Learn More](https://cloud.google.com/docs/authentication/production)
+2. Project (Autocomplete) **Required if not in settings** - Project name
+[Learn More](https://cloud.google.com/resource-manager/docs/creating-managing-projects)
+3. Region (Autocomplete) **Required** - Region name
+[Learn More](https://cloud.google.com/compute/docs/regions-zones)
+4. Zone (Autocomplete) **Required For Zonal Clusters** - Zone name
+[Learn More](https://cloud.google.com/compute/docs/regions-zones)
+5. Cluster (Autocomplete) **Required** - The GKE cluster to describe credentials.
+[Learn More](https://cloud.google.com/kubernetes-engine/docs/concepts/cluster-architecture)
+
 ## Method: List Clusters
 List all clusters of the connected account.
 
