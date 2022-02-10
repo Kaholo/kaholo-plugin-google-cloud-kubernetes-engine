@@ -119,6 +119,22 @@ async function describeCluster(action, settings){
     });
 }
 
+async function describeClusterCredentials(action, settings){
+    const { region, zone, cluster } = action.params;
+    const client = GKEService.from(action.params, settings);
+    var describedCluster = await client.describeCluster({
+        region: parsers.autocomplete(region),
+        zone: parsers.autocomplete(zone),
+        cluster: parsers.autocomplete(cluster)
+    });
+
+    return clusterCredentials = {
+        certificateAuthority: describedCluster.masterAuth.clusterCaCertificate,
+        endpoint: describedCluster.endpoint,
+        accessToken: await client.gke.auth.getAccessToken()
+    }
+}
+
 async function listClusters(action, settings){
     const { region, zone } = action.params;
     const client = GKEService.from(action.params, settings);
@@ -146,6 +162,7 @@ module.exports = {
 	deleteCluster,
 	deleteNodePool,
 	describeCluster,
+    describeClusterCredentials,
 	listClusters,
 	listNodePools,
     // Autocomplete Functions

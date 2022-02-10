@@ -992,6 +992,59 @@
       ]
     },
     {
+      "name": "describeClusterCredentials",
+      "viewName": "Describe Cluster Credentials",
+      "params": [
+        {
+          "name": "creds",
+          "viewName": "Service Account Credentials",
+          "type": "vault",
+          "description": "Vaulted JSON document containing service account credentials as provided by GCP",
+          "learnUrl": "https://cloud.google.com/docs/authentication/production"
+        },
+        {
+          "name": "project",
+          "viewName": "Project",
+          "type": "autocomplete",
+          "autocompleteType": "function",
+          "functionName": "listProjectsAuto",
+          "description": "GCP Project defines how your app interacts with services and resources",
+          "placeholder": "select using autocomplete",
+          "learnUrl": "https://cloud.google.com/resource-manager/docs/creating-managing-projects"
+        },
+        {
+          "name": "region",
+          "viewName": "Region",
+          "type": "autocomplete",
+          "autocompleteType": "function",
+          "functionName": "listRegionsAuto",
+          "description": "Geographical GCP region where clusters are located",
+          "placeholder": "select using autocomplete",
+          "learnUrl": "https://cloud.google.com/compute/docs/regions-zones"
+        },
+        {
+          "name": "zone",
+          "viewName": "Zone",
+          "type": "autocomplete",
+          "autocompleteType": "function",
+          "functionName": "listZonesAuto",
+          "description": "Zone is a subdivision of GCP regions, typically region-a, b, or c",
+          "placeholder": "select using autocomplete",
+          "learnUrl": "https://cloud.google.com/compute/docs/regions-zones"
+        },
+        {
+          "name": "cluster",
+          "viewName": "Cluster",
+          "type": "autocomplete",
+          "autocompleteType": "function",
+          "functionName": "listClustersAuto",
+          "description": "The cluster for which credentials are to be described",
+          "placeholder": "select using autocomplete",
+          "learnUrl": "https://cloud.google.com/kubernetes-engine/docs/concepts/cluster-architecture"
+        }
+      ]
+    },
+    {
       "name": "listClusters",
       "viewName": "List Clusters",
       "params": [
