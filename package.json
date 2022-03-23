@@ -1,11 +1,9 @@
 {
 	"name": "kaholo-plugin-google-cloud-kubernetes-engine",
-	"version": "1.0.6",
 	"description": "Kaholo plugin for integration with Google Cloud Kubernetes Engine(GKE).",
 	"main": "app.js",
 	"scripts": {
-		"test": "mocha",
-		"build": "zip -X -r ../zip/kaholo-plugin-google-cloud-kubernetes-engine.zip ./ -x 'node_modules/*' -x 'test/*' -x 'package-lock*.json'"
+		"test": "mocha"		
 	},
 	"author": "Kaholo Group(Amit Alon)",
 	"license": "ISC",
