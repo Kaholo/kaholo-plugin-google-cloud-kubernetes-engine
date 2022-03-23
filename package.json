@@ -1,20 +1,25 @@
 {
-	"name": "kaholo-plugin-google-cloud-kubernetes-engine",
-	"description": "Kaholo plugin for integration with Google Cloud Kubernetes Engine(GKE).",
-	"main": "app.js",
-	"scripts": {
-		"test": "mocha"		
-	},
-	"author": "Kaholo Group(Amit Alon)",
-	"license": "ISC",
-	"dependencies": {
-		"@google-cloud/container": "^2.4.0",
-		"@google-cloud/compute": "^2.5.0",
-		"google-auth-library": "^7.10.3",
-		"googleapis": "^92.0.0"
-	},
-	"devDependencies": {
-		"chai": "^4.3.6",
-		"mocha": "^9.2.0"
-	}
+  "name": "kaholo-plugin-google-cloud-kubernetes-engine",
+  "description": "Kaholo plugin for integration with Google Cloud Kubernetes Engine(GKE).",
+  "main": "app.js",
+  "scripts": {
+    "test": "npx jest .",
+    "lint": "npx eslint .",
+    "lint:fix": "npx eslint . --fix"
+  },
+  "author": "Kaholo Group(Amit Alon)",
+  "license": "ISC",
+  "dependencies": {
+    "@google-cloud/compute": "^2.5.0",
+    "@google-cloud/container": "^2.4.0",
+    "google-auth-library": "^7.10.3",
+    "googleapis": "^92.0.0"
+  },
+  "devDependencies": {
+    "chai": "^4.3.6",
+    "eslint": "^8.11.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-import": "^2.25.4",
+    "mocha": "^9.2.0"
+  }
 }
