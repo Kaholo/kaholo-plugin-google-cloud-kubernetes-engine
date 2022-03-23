@@ -66,7 +66,14 @@ function sleep(ms) {
   return new Promise((resolve) => { setTimeout(resolve, ms); });
 }
 
+function validateZoneParameter({ locationType, zone }) {
+  if (locationType === "Zonal" && !zone) {
+    throw new Error("For zonal location type the parameter \"Zone\" must be provided.");
+  }
+}
+
 module.exports = {
+  validateZoneParameter,
   removeUndefinedAndEmpty,
   defaultGcpCallback,
   handleOperation,

@@ -1,7 +1,7 @@
 const container = require("@google-cloud/container");
 const { JWT } = require("google-auth-library");
 const { google } = require("googleapis");
-const { removeUndefinedAndEmpty, sleep } = require("./helpers");
+const { removeUndefinedAndEmpty, sleep, validateZoneParameter } = require("./helpers");
 const parsers = require("./parsers");
 const GCCEService = require("./gcce.service");
 
@@ -9,7 +9,12 @@ const containerApi = google.container("v1");
 
 module.exports = class GKEService {
   constructor({ credentials, projectId }) {
-    if (!credentials) { throw new Error("Must provide credentials and project!"); }
+    if (!credentials) {
+      throw new Error("Credentials are required. Provide them either in the action's parameters or plugin's settings.");
+    }
+    if (!projectId) {
+      throw new Error("Project is required. Provide it either in the action's parameters or plugin's settings.");
+    }
     if (typeof credentials !== "object") { throw new Error("Credentials provided in a bad format"); }
     this.options = { credentials };
     if (projectId) { this.options.projectId = projectId; }
@@ -43,9 +48,7 @@ module.exports = class GKEService {
       controlPlaneReleaseChannel, version, waitForOperation,
     } = params;
     const isZonal = locationType === "Zonal";
-    if (!clusterName || !locationType || !version || (isZonal && !zone) || (!isZonal && !region)) {
-      throw new Error("Didn't provide one of the required parameters!");
-    }
+    validateZoneParameter({ locationType, zone });
     return this.createClusterJson({
       clusterJson: removeUndefinedAndEmpty({
         name: clusterName,
@@ -77,9 +80,6 @@ module.exports = class GKEService {
     let resolvedMachineType = machineType;
     if (customMachineCpuCount || customMachineMem) {
       resolvedMachineType += `-${customMachineCpuCount}-${customMachineMem}`;
-    }
-    if (!nodePoolName || !numberOfNodes || !resolvedMachineType || !diskType || !diskSize) {
-      throw new Error("Didn't provide one of the required parameters.");
     }
     return removeUndefinedAndEmpty({
       name: nodePoolName,
@@ -132,7 +132,7 @@ module.exports = class GKEService {
   async createClusterJson({
     locationType, region, zone, clusterJson, waitForOperation,
   }) {
-    if (!clusterJson) { throw new Error("Didn't provide cluster parameters JSON!"); }
+    validateZoneParameter({ locationType, zone });
     const isZonal = locationType === "Zonal";
     const operation = (await this.gke.createCluster({
       parent: this.getLocationAsParent({ region, zone: isZonal ? zone : undefined }),
@@ -165,7 +165,6 @@ module.exports = class GKEService {
     if (!cluster) {
       throw new Error("Must provide a cluster to create the node pool for.");
     }
-    if (!nodePoolJson) { throw new Error("Didn't provide Node Pool parameters JSON!"); }
     const parent = this.getClusterAsParent({ region, zone, cluster });
     const operation = (await this.gke.createNodePool({
       clusterId: cluster,
@@ -195,9 +194,6 @@ module.exports = class GKEService {
   async deleteNodePool({
     region, zone, cluster, nodePool, waitForOperation,
   }) {
-    if (!cluster || !nodePool) {
-      throw new Error("Didn't provide one of the required parameters.");
-    }
     const parent = this.getClusterAsParent({ region, zone, cluster });
     const operation = (await this.gke.deleteNodePool({
       clusterId: cluster,
