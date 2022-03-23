@@ -1,5 +1,6 @@
 {
   "name": "Google-Cloud-Kubernetes-Engine",
+  "viewName": "Google Cloud Kubernetes Engine",
   "type": "executer",
   "exposeRoute": false,
   "execProgram": "node",
