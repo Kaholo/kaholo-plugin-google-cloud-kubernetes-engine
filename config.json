@@ -50,16 +50,14 @@
       "params": [
         {
           "name": "creds",
-          "viewName": "Service Account Credentials *",
-          "required": false,
+          "viewName": "Service Account Credentials",
           "type": "vault",
           "description": "Vaulted JSON document containing service account credentials as provided by GCP",
           "learnUrl": "https://cloud.google.com/docs/authentication/production"
         },
         {
           "name": "project",
-          "viewName": "Project *",
-          "required": false,
+          "viewName": "Project",
           "type": "autocomplete",
           "autocompleteType": "function",
           "functionName": "listProjectsAuto",
@@ -69,8 +67,8 @@
         },
         {
           "name": "name",
-          "viewName": "Name *",
-          "required": false,
+          "viewName": "Name",
+          "required": true,
           "type": "string",
           "description": "A name for the new cluster",
           "placeholder": "dev-alpha-two",
@@ -78,8 +76,8 @@
         },
         {
           "name": "locationType",
-          "viewName": "Location Type *",
-          "required": false,
+          "viewName": "Location Type",
+          "required": true,
           "type": "options",
           "description": "Zonal - a single control plan in a single zone. Regional - has control planes across zones in the region for high availability.",
           "placeholder": "select using drop-down",
@@ -98,7 +96,7 @@
         {
           "name": "region",
           "viewName": "Region",
-          "required": false,
+          "required": true,
           "type": "autocomplete",
           "autocompleteType": "function",
           "functionName": "listRegionsAuto",
@@ -109,7 +107,6 @@
         {
           "name": "zone",
           "viewName": "Zone",
-          "required": false,
           "type": "autocomplete",
           "autocompleteType": "function",
           "functionName": "listZonesAuto",
@@ -120,7 +117,6 @@
         {
           "name": "controlPlaneReleaseChannel",
           "viewName": "Control Plane Release Channel *",
-          "required": false,
           "type": "options",
           "description": "Kubernetes releases updates often, to deliver security updates, fix known issues, and introduce new features. Release channels determine the frequency and extent of updates to your cluster.",
           "placeholder": "select using drop-down",
@@ -146,8 +142,8 @@
         },
         {
           "name": "version",
-          "viewName": "Cluster Version *",
-          "required": false,
+          "viewName": "Cluster Version",
+          "required": true,
           "type": "string",
           "description": "Initial cluster version.",
           "placeholder": "1.21.6",
@@ -155,8 +151,8 @@
         },
         {
           "name": "numberOfNodes",
-          "viewName": "Number Of Nodes *",
-          "required": false,
+          "viewName": "Number Of Nodes",
+          "required": true,
           "type": "string",
           "description": "The number of running nodes for the default node pool",
           "placeholder": "3",
@@ -165,7 +161,6 @@
         {
           "name": "enableAutoscaling",
           "viewName": "Enable Autoscaling",
-          "required": false,
           "type": "boolean",
           "description": "Autoscaling increases or decreases the number of nodes, based on the demands of your workloads.",
           "learnUrl": "https://cloud.google.com/kubernetes-engine/docs/concepts/cluster-autoscaler"
@@ -173,7 +168,6 @@
         {
           "name": "minNode",
           "viewName": "Minimum Number Of Nodes",
-          "required": false,
           "type": "string",
           "placeholder": "1",
           "description": "The minimum number of nodes the autoscaling should always keep runnning",
@@ -182,7 +176,6 @@
         {
           "name": "maxNode",
           "viewName": "Maximum Number Of Nodes",
-          "required": false,
           "type": "string",
           "placeholder": "3",
           "description": "The maximum number of nodes the autoscaling should run when under high load",
@@ -190,8 +183,8 @@
         },
         {
           "name": "machineType",
-          "viewName": "Machine Type *",
-          "required": false,
+          "viewName": "Machine Type",
+          "required": true,
           "type": "autocomplete",
           "autocompleteType": "function",
           "functionName": "listMachineTypesAuto",
@@ -202,7 +195,7 @@
         {
           "name": "nodeImage",
           "viewName": "Node Image Type",
-          "required": false,
+          "required": true,
           "type": "options",
           "description": "The operating system image that runs on each node",
           "placeholder": "select using drop-down",
@@ -244,8 +237,8 @@
         },
         {
           "name": "diskType",
-          "viewName": "Boot Disk Type *",
-          "required": false,
+          "viewName": "Boot Disk Type",
+          "required": true,
           "type": "options",
           "options": [
             {
@@ -267,8 +260,8 @@
         },
         {
           "name": "diskSize",
-          "viewName": "Boot Disk Size (GB) *",
-          "required": false,
+          "viewName": "Boot Disk Size (GB)",
+          "required": true,
           "type": "string",
           "description": "The size in GB for the boot disk of each node in the pool",
           "placeholder": "10",
@@ -277,7 +270,6 @@
         {
           "name": "diskEncryptionKey",
           "viewName": "Boot Disk Encryption Key",
-          "required": false,
           "type": "string",
           "description": "Google manages encryption of customer data by default. To control and manage encryption key rotation yourself using CMEK, provide a key name here.",
           "placeholder": "my-cmek-key",
@@ -286,7 +278,6 @@
         {
           "name": "waitForOperation",
           "viewName": "Wait For Operation End",
-          "required": false,
           "type": "boolean",
           "description": "Wait until the operation is completed before moving onto the next Action in the pipeline.",
           "learnUrl": "https://github.com/Kaholo/kaholo-plugin-google-cloud-kubernetes-engine"
@@ -300,15 +291,13 @@
         {
           "name": "creds",
           "viewName": "Service Account Credentials *",
-          "required": false,
           "type": "vault",
           "description": "Vaulted JSON document containing service account credentials as provided by GCP",
           "learnUrl": "https://cloud.google.com/docs/authentication/production"
         },
         {
           "name": "project",
-          "viewName": "Project *",
-          "required": false,
+          "viewName": "Project",
           "type": "autocomplete",
           "autocompleteType": "function",
           "functionName": "listProjectsAuto",
@@ -318,8 +307,8 @@
         },
         {
           "name": "locationType",
-          "viewName": "Location Type *",
-          "required": false,
+          "viewName": "Location Type",
+          "required": true,
           "type": "options",
           "description": "Zonal - a single control plan in a single zone. Regional - has control planes across zones in the region for high availability.",
           "placeholder": "select using drop-down",
@@ -338,7 +327,7 @@
         {
           "name": "region",
           "viewName": "Region",
-          "required": false,
+          "required": true,
           "type": "autocomplete",
           "autocompleteType": "function",
           "functionName": "listRegionsAuto",
@@ -349,7 +338,6 @@
         {
           "name": "zone",
           "viewName": "Zone",
-          "required": false,
           "type": "autocomplete",
           "autocompleteType": "function",
           "functionName": "listZonesAuto",
@@ -359,8 +347,8 @@
         },
         {
           "name": "clusterJson",
-          "viewName": "Cluster JSON *",
-          "required": false,
+          "viewName": "Cluster JSON",
+          "required": true,
           "type": "text",
           "description": "A JSON document describing the cluster to create. Can be declared in Code e.g. const mycluster = {\"name\": \"cluster-alpha\", ...} or a path to a JSON document on the Kaholo agent.",
           "placeholder": "/home/node/cluster_01.json",
@@ -369,7 +357,6 @@
         {
           "name": "waitForOperation",
           "viewName": "Wait For Operation End",
-          "required": false,
           "type": "boolean",
           "description": "Wait until the operation is completed before moving onto the next Action in the pipeline.",
           "learnUrl": "https://github.com/Kaholo/kaholo-plugin-google-cloud-kubernetes-engine"
@@ -382,16 +369,14 @@
       "params": [
         {
           "name": "creds",
-          "viewName": "Service Account Credentials *",
-          "required": false,
+          "viewName": "Service Account Credentials",
           "type": "vault",
           "description": "Vaulted JSON document containing service account credentials as provided by GCP",
           "learnUrl": "https://cloud.google.com/docs/authentication/production"
         },
         {
           "name": "project",
-          "viewName": "Project *",
-          "required": false,
+          "viewName": "Project",
           "type": "autocomplete",
           "autocompleteType": "function",
           "functionName": "listProjectsAuto",
@@ -402,7 +387,7 @@
         {
           "name": "region",
           "viewName": "Region",
-          "required": false,
+          "required": true,
           "type": "autocomplete",
           "autocompleteType": "function",
           "functionName": "listRegionsAuto",
@@ -413,7 +398,6 @@
         {
           "name": "zone",
           "viewName": "Zone",
-          "required": false,
           "type": "autocomplete",
           "autocompleteType": "function",
           "functionName": "listZonesAuto",
@@ -423,8 +407,8 @@
         },
         {
           "name": "cluster",
-          "viewName": "Cluster *",
-          "required": false,
+          "viewName": "Cluster",
+          "required": true,
           "type": "autocomplete",
           "autocompleteType": "function",
           "functionName": "listClustersAuto",
@@ -434,8 +418,8 @@
         },
         {
           "name": "version",
-          "viewName": "Cluster Version *",
-          "required": false,
+          "viewName": "Cluster Version",
+          "required": true,
           "type": "string",
           "description": "Initial cluster version. Leave blank to use current version.",
           "placeholder": "1.21.6",
@@ -443,8 +427,8 @@
         },
         {
           "name": "name",
-          "viewName": "Pool Name *",
-          "required": false,
+          "viewName": "Pool Name",
+          "required": true,
           "type": "string",
           "description": "A name for the new node pool",
           "placeholder": "dev-pool-bravo",
@@ -452,8 +436,8 @@
         },
         {
           "name": "numberOfNodes",
-          "viewName": "Number Of Nodes *",
-          "required": false,
+          "viewName": "Number Of Nodes",
+          "required": true,
           "type": "string",
           "description": "The number of running nodes for this node pool",
           "placeholder": "3",
@@ -462,7 +446,6 @@
         {
           "name": "enableAutoscaling",
           "viewName": "Enable Autoscaling",
-          "required": false,
           "type": "boolean",
           "description": "Automatically resize the number of nodes in a given node pool, based on the demands of your workloads.",
           "learnUrl": "https://cloud.google.com/kubernetes-engine/docs/concepts/cluster-autoscaler"
@@ -470,7 +453,6 @@
         {
           "name": "minNode",
           "viewName": "Minimum Number Of Nodes",
-          "required": false,
           "type": "string",
           "placeholder": "1",
           "description": "The minimum number of nodes the autoscaling should always keep runnning",
@@ -479,7 +461,6 @@
         {
           "name": "maxNode",
           "viewName": "Maximum Number Of Nodes",
-          "required": false,
           "type": "string",
           "placeholder": "3",
           "description": "The maximum number of nodes the autoscaling should run when under high load",
@@ -488,7 +469,6 @@
         {
           "name": "maxSurge",
           "viewName": "Max Surge",
-          "required": false,
           "type": "string",
           "placeholder": "1",
           "description": "Surge upgrades let you control the number of nodes GKE can upgrade at a time and control how disruptive upgrades are to your workloads.",
@@ -497,7 +477,6 @@
         {
           "name": "maxUnavailable",
           "viewName": "Max Unavailable",
-          "required": false,
           "type": "string",
           "placeholder": "0",
           "description": "Number of nodes that can be simultaneously unavailable during an upgrade.",
@@ -505,8 +484,8 @@
         },
         {
           "name": "machineType",
-          "viewName": "Machine Type *",
-          "required": false,
+          "viewName": "Machine Type",
+          "required": true,
           "type": "autocomplete",
           "autocompleteType": "function",
           "functionName": "listMachineTypesWithCustomAuto",
@@ -517,7 +496,6 @@
         {
           "name": "customMachineCpuCount",
           "viewName": "Custom Machine CPU Count",
-          "required": false,
           "type": "string",
           "description": "Required CPUs for the VM instance.",
           "placeholder": "2",
@@ -526,7 +504,6 @@
         {
           "name": "customMachineMem",
           "viewName": "Custom Machine Memory(In MB)",
-          "required": false,
           "type": "string",
           "description": "When using custom nachine type, the size of the memory for the machine",
           "placeholder": "1024",
@@ -535,7 +512,7 @@
         {
           "name": "nodeImage",
           "viewName": "Node Image Type",
-          "required": false,
+          "required": true,
           "type": "options",
           "description": "The operating system image that runs on each node",
           "placeholder": "select using drop-down",
@@ -577,8 +554,8 @@
         },
         {
           "name": "diskType",
-          "viewName": "Boot Disk Type *",
-          "required": false,
+          "viewName": "Boot Disk Type",
+          "required": true,
           "type": "options",
           "options": [
             {
@@ -600,8 +577,8 @@
         },
         {
           "name": "diskSize",
-          "viewName": "Boot Disk Size (GB) *",
-          "required": false,
+          "viewName": "Boot Disk Size (GB)",
+          "required": true,
           "type": "string",
           "description": "The size in GB for the boot disk of each node in the pool",
           "placeholder": "10",
@@ -610,7 +587,6 @@
         {
           "name": "diskEncryptionKey",
           "viewName": "Boot Disk Encryption Key",
-          "required": false,
           "type": "string",
           "description": "Google manages encryption of customer data by default. To control and manage encryption key rotation yourself using CMEK, provide a key name here.",
           "placeholder": "my-cmek-key",
@@ -619,7 +595,6 @@
         {
           "name": "preemptible",
           "viewName": "Enable Preemptible Nodes",
-          "required": false,
           "type": "boolean",
           "description": "An instance that can be purchased for a steep discount which will terminate the instance after 24 hours.",
           "learnUrl": "https://cloud.google.com/kubernetes-engine/docs/how-to/preemptible-vms"
@@ -627,7 +602,6 @@
         {
           "name": "maxPodsPerNode",
           "viewName": "Maximum Pods Per Node",
-          "required": false,
           "type": "string",
           "description": "The value is used to optimize the partitioning of cluster's IP address range to sub-ranges at node level.",
           "placeholder": "110",
@@ -636,7 +610,7 @@
         {
           "name": "networkTags",
           "viewName": "Network Tags",
-          "required": false,
+
           "type": "text",
           "description": "Tags represent firewall rules applied to each node.",
           "placeholder": "example-tag",
@@ -645,7 +619,6 @@
         {
           "name": "serviceAccount",
           "viewName": "API Access Service Account",
-          "required": false,
           "type": "autocomplete",
           "autocompleteType": "function",
           "functionName": "listServiceAccountsAuto",
@@ -656,7 +629,6 @@
         {
           "name": "saAccessScopes",
           "viewName": "Service Account Access Scopes",
-          "required": false,
           "type": "options",
           "options": [
             {
@@ -675,7 +647,6 @@
         {
           "name": "enableIntegrityMonitoring",
           "viewName": "Enable Integrity Monitoring",
-          "required": false,
           "type": "boolean",
           "description": "Integrity monitoring is a node pool setting that's enabled by default on GKE.",
           "learnUrl": "https://cloud.google.com/kubernetes-engine/docs/how-to/shielded-gke-nodes"
@@ -683,7 +654,6 @@
         {
           "name": "enableSecureBoot",
           "viewName": "Enable Secure Boot",
-          "required": false,
           "type": "boolean",
           "description": "Secure boot helps protect your nodes against boot-level and kernel-level malware and rootkits.",
           "learnUrl": "https://github.com/Kaholo/kaholo-plugin-google-cloud-kubernetes"
@@ -691,7 +661,6 @@
         {
           "name": "labels",
           "viewName": "Kubernetes Labels",
-          "required": false,
           "type": "text",
           "description": "Kubernetes labels to add.",
           "placeholder": "example-label=Example Value\nexample-key-only-label",
@@ -700,7 +669,6 @@
         {
           "name": "gceInstanceMetadata",
           "viewName": "GCE Instance Metadata",
-          "required": false,
           "type": "text",
           "description": "A Metadata server that knows details about your App Engine instance, such as its containing project ID, service accounts, and tokens used by the service accounts. You can access this data using simple HTTP requests: no client libraries are required.",
           "placeholder": "disable-legacy-endpoints=true",
@@ -709,7 +677,6 @@
         {
           "name": "waitForOperation",
           "viewName": "Wait For Operation End",
-          "required": false,
           "type": "boolean",
           "description": "Wait until the operation is completed before moving onto the next Action in the pipeline.",
           "learnUrl": "https://github.com/Kaholo/kaholo-plugin-google-cloud-kubernetes-engine"
@@ -722,16 +689,14 @@
       "params": [
         {
           "name": "creds",
-          "viewName": "Service Account Credentials *",
-          "required": false,
+          "viewName": "Service Account Credentials",
           "type": "vault",
           "description": "Vaulted JSON document containing service account credentials as provided by GCP",
           "learnUrl": "https://cloud.google.com/docs/authentication/production"
         },
         {
           "name": "project",
-          "viewName": "Project *",
-          "required": false,
+          "viewName": "Project",
           "type": "autocomplete",
           "autocompleteType": "function",
           "functionName": "listProjectsAuto",
@@ -741,8 +706,8 @@
         },
         {
           "name": "region",
-          "viewName": "Region *",
-          "required": false,
+          "viewName": "Region",
+          "required": true,
           "type": "autocomplete",
           "autocompleteType": "function",
           "functionName": "listRegionsAuto",
@@ -753,7 +718,6 @@
         {
           "name": "zone",
           "viewName": "Zone",
-          "required": false,
           "type": "autocomplete",
           "autocompleteType": "function",
           "functionName": "listZonesAuto",
@@ -763,8 +727,8 @@
         },
         {
           "name": "cluster",
-          "viewName": "Cluster *",
-          "required": false,
+          "viewName": "Cluster",
+          "required": true,
           "type": "autocomplete",
           "autocompleteType": "function",
           "functionName": "listClustersAuto",
@@ -774,8 +738,8 @@
         },
         {
           "name": "nodePoolJson",
-          "viewName": "Node Pool JSON *",
-          "required": false,
+          "viewName": "Node Pool JSON",
+          "required": true,
           "type": "text",
           "description": "Create the node pool according to the parameters specified in the provided JSON.",
           "placeholder": "/home/example/nodepool_01.json",
@@ -784,7 +748,6 @@
         {
           "name": "waitForOperation",
           "viewName": "Wait For Operation End",
-          "required": false,
           "type": "boolean",
           "description": "Wait until the operation is completed before moving onto the next Action in the pipeline.",
           "learnUrl": "https://github.com/Kaholo/kaholo-plugin-google-cloud-kubernetes-engine"
@@ -797,16 +760,14 @@
       "params": [
         {
           "name": "creds",
-          "viewName": "Service Account Credentials *",
-          "required": false,
+          "viewName": "Service Account Credentials",
           "type": "vault",
           "description": "Vaulted JSON document containing service account credentials as provided by GCP",
           "learnUrl": "https://cloud.google.com/docs/authentication/production"
         },
         {
           "name": "project",
-          "viewName": "Project *",
-          "required": false,
+          "viewName": "Project",
           "type": "autocomplete",
           "autocompleteType": "function",
           "functionName": "listProjectsAuto",
@@ -816,8 +777,8 @@
         },
         {
           "name": "region",
-          "viewName": "Region *",
-          "required": false,
+          "viewName": "Region",
+          "required": true,
           "type": "autocomplete",
           "autocompleteType": "function",
           "functionName": "listRegionsAuto",
@@ -828,7 +789,6 @@
         {
           "name": "zone",
           "viewName": "Zone",
-          "required": false,
           "type": "autocomplete",
           "autocompleteType": "function",
           "functionName": "listZonesAuto",
@@ -838,8 +798,8 @@
         },
         {
           "name": "cluster",
-          "viewName": "Cluster *",
-          "required": false,
+          "viewName": "Cluster",
+          "required": true,
           "type": "autocomplete",
           "autocompleteType": "function",
           "functionName": "listClustersAuto",
@@ -850,7 +810,6 @@
         {
           "name": "waitForOperation",
           "viewName": "Wait For Operation End",
-          "required": false,
           "type": "boolean",
           "description": "Wait until the operation is completed before moving onto the next Action in the pipeline.",
           "learnUrl": "https://github.com/Kaholo/kaholo-plugin-google-cloud-kubernetes-engine"
@@ -863,16 +822,14 @@
       "params": [
         {
           "name": "creds",
-          "viewName": "Service Account Credentials *",
-          "required": false,
+          "viewName": "Service Account Credentials",
           "type": "vault",
           "description": "Vaulted JSON document containing service account credentials as provided by GCP",
           "learnUrl": "https://cloud.google.com/docs/authentication/production"
         },
         {
           "name": "project",
-          "viewName": "Project *",
-          "required": false,
+          "viewName": "Project",
           "type": "autocomplete",
           "autocompleteType": "function",
           "functionName": "listProjectsAuto",
@@ -883,7 +840,7 @@
         {
           "name": "region",
           "viewName": "Region",
-          "required": false,
+          "required": true,
           "type": "autocomplete",
           "autocompleteType": "function",
           "functionName": "listRegionsAuto",
@@ -894,7 +851,6 @@
         {
           "name": "zone",
           "viewName": "Zone",
-          "required": false,
           "type": "autocomplete",
           "autocompleteType": "function",
           "functionName": "listZonesAuto",
@@ -904,8 +860,8 @@
         },
         {
           "name": "cluster",
-          "viewName": "Cluster *",
-          "required": false,
+          "viewName": "Cluster",
+          "required": true,
           "type": "autocomplete",
           "autocompleteType": "function",
           "functionName": "listClustersAuto",
@@ -915,8 +871,8 @@
         },
         {
           "name": "nodePool",
-          "viewName": "Node Pool *",
-          "required": false,
+          "viewName": "Node Pool",
+          "required": true,
           "type": "autocomplete",
           "autocompleteType": "function",
           "functionName": "listNodePoolsAuto",
@@ -927,7 +883,6 @@
         {
           "name": "waitForOperation",
           "viewName": "Wait For Operation End",
-          "required": false,
           "type": "boolean",
           "description": "Wait until the operation is completed before moving onto the next Action in the pipeline.",
           "learnUrl": "https://github.com/Kaholo/kaholo-plugin-google-cloud-kubernetes-engine"
@@ -940,16 +895,14 @@
       "params": [
         {
           "name": "creds",
-          "viewName": "Service Account Credentials *",
-          "required": false,
+          "viewName": "Service Account Credentials",
           "type": "vault",
           "description": "Vaulted JSON document containing service account credentials as provided by GCP",
           "learnUrl": "https://cloud.google.com/docs/authentication/production"
         },
         {
           "name": "project",
-          "viewName": "Project *",
-          "required": false,
+          "viewName": "Project",
           "type": "autocomplete",
           "autocompleteType": "function",
           "functionName": "listProjectsAuto",
@@ -959,8 +912,8 @@
         },
         {
           "name": "region",
-          "viewName": "Region *",
-          "required": false,
+          "viewName": "Region",
+          "required": true,
           "type": "autocomplete",
           "autocompleteType": "function",
           "functionName": "listRegionsAuto",
@@ -971,7 +924,6 @@
         {
           "name": "zone",
           "viewName": "Zone",
-          "required": false,
           "type": "autocomplete",
           "autocompleteType": "function",
           "functionName": "listZonesAuto",
@@ -981,8 +933,8 @@
         },
         {
           "name": "cluster",
-          "viewName": "Cluster *",
-          "required": false,
+          "viewName": "Cluster",
+          "required": true,
           "type": "autocomplete",
           "autocompleteType": "function",
           "functionName": "listClustersAuto",
@@ -1016,6 +968,7 @@
         {
           "name": "region",
           "viewName": "Region",
+          "required": true,
           "type": "autocomplete",
           "autocompleteType": "function",
           "functionName": "listRegionsAuto",
@@ -1036,6 +989,7 @@
         {
           "name": "cluster",
           "viewName": "Cluster",
+          "required": true,
           "type": "autocomplete",
           "autocompleteType": "function",
           "functionName": "listClustersAuto",
@@ -1051,16 +1005,14 @@
       "params": [
         {
           "name": "creds",
-          "viewName": "Service Account Credentials *",
-          "required": false,
+          "viewName": "Service Account Credentials",
           "type": "vault",
           "description": "Vaulted JSON document containing service account credentials as provided by GCP",
           "learnUrl": "https://cloud.google.com/docs/authentication/production"
         },
         {
           "name": "project",
-          "viewName": "Project *",
-          "required": false,
+          "viewName": "Project",
           "type": "autocomplete",
           "autocompleteType": "function",
           "functionName": "listProjectsAuto",
@@ -1070,8 +1022,8 @@
         },
         {
           "name": "region",
-          "viewName": "Region *",
-          "required": false,
+          "viewName": "Region",
+          "required": true,
           "type": "autocomplete",
           "autocompleteType": "function",
           "functionName": "listRegionsAuto",
@@ -1082,7 +1034,6 @@
         {
           "name": "zone",
           "viewName": "Zone",
-          "required": false,
           "type": "autocomplete",
           "autocompleteType": "function",
           "functionName": "listZonesAuto",
@@ -1098,16 +1049,14 @@
       "params": [
         {
           "name": "creds",
-          "viewName": "Service Account Credentials *",
-          "required": false,
+          "viewName": "Service Account Credentials",
           "type": "vault",
           "description": "Vaulted JSON document containing service account credentials as provided by GCP",
           "learnUrl": "https://cloud.google.com/docs/authentication/production"
         },
         {
           "name": "project",
-          "viewName": "Project *",
-          "required": false,
+          "viewName": "Project",
           "type": "autocomplete",
           "autocompleteType": "function",
           "functionName": "listProjectsAuto",
@@ -1118,7 +1067,7 @@
         {
           "name": "region",
           "viewName": "Region",
-          "required": false,
+          "required": true,
           "type": "autocomplete",
           "autocompleteType": "function",
           "functionName": "listRegionsAuto",
@@ -1129,7 +1078,6 @@
         {
           "name": "zone",
           "viewName": "Zone",
-          "required": false,
           "type": "autocomplete",
           "autocompleteType": "function",
           "functionName": "listZonesAuto",
@@ -1139,8 +1087,8 @@
         },
         {
           "name": "cluster",
-          "viewName": "Cluster *",
-          "required": false,
+          "viewName": "Cluster",
+          "required": true,
           "type": "autocomplete",
           "autocompleteType": "function",
           "functionName": "listClustersAuto",
