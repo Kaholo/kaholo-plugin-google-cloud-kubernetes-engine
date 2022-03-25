@@ -12,9 +12,6 @@ module.exports = class GKEService {
     if (!credentials) {
       throw new Error("Credentials are required. Provide them either in the action's parameters or plugin's settings.");
     }
-    if (!projectId) {
-      throw new Error("Project is required. Provide it either in the action's parameters or plugin's settings.");
-    }
     if (typeof credentials !== "object") { throw new Error("Credentials provided in a bad format"); }
     this.options = { credentials };
     if (projectId) { this.options.projectId = projectId; }
@@ -46,6 +43,7 @@ module.exports = class GKEService {
     const {
       name: clusterName, locationType, region, zone,
       controlPlaneReleaseChannel, version, waitForOperation,
+      ...restParams
     } = params;
     const isZonal = locationType === "Zonal";
     validateZoneParameter({ locationType, zone });
@@ -62,6 +60,7 @@ module.exports = class GKEService {
           nodePoolName: "default-pool",
           ...params,
         })],
+        ...restParams,
       }),
       zone,
       region,
@@ -120,7 +119,7 @@ module.exports = class GKEService {
           autoRepair: true,
         },
         serviceAccount,
-        resolvedMachineType,
+        machineType: resolvedMachineType,
         labels,
         diskType,
         preemptible,
@@ -134,11 +133,11 @@ module.exports = class GKEService {
   }) {
     validateZoneParameter({ locationType, zone });
     const isZonal = locationType === "Zonal";
-    const operation = (await this.gke.createCluster({
+    const [operation] = await this.gke.createCluster({
       parent: this.getLocationAsParent({ region, zone: isZonal ? zone : undefined }),
       cluster: clusterJson,
       zone: isZonal ? zone : undefined,
-    }))[0];
+    });
     return waitForOperation ? this.waitForOperation({
       zone: isZonal ? zone : undefined,
       region,
@@ -254,11 +253,19 @@ module.exports = class GKEService {
   async listMachineTypes({ zone }, fields, pageToken) {
     let resolvedZone = zone;
     if (!resolvedZone) { resolvedZone = "us-central1-c"; }
-    return this.gcce.listMachineTypes({ resolvedZone }, fields, pageToken);
+    return this.gcce.listMachineTypes({ zone: resolvedZone }, fields, pageToken);
   }
 
   async listServiceAccounts() {
     return this.gcce.listServiceAccounts({});
+  }
+
+  listNetworks(...args) {
+    return this.gcce.listNetworks(...args);
+  }
+
+  listSubnetworks(...args) {
+    return this.gcce.listSubnetworks(...args);
   }
 
   async waitForOperation({ region, zone, operation }) {

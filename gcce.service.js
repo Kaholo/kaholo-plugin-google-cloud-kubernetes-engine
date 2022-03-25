@@ -378,30 +378,33 @@ module.exports = class GoogleComputeService extends Compute {
     return (await iam.projects.serviceAccounts.list(request)).data.accounts;
   }
 
-  async listNetworks(_, fields, pageToken) {
+  async listNetworks({ query }, fields, pageToken) {
     const request = removeUndefinedAndEmpty({
       auth: this.getAuthClient(),
       project: this.projectId,
       fields: parseFields(fields),
+      filter: query && `name:${query}`,
       maxResults: 500,
       pageToken,
     });
 
-    return (await compute.networks.list(request)).data;
+    const { data } = await compute.networks.list(request);
+    return Object.keys(data).length === 0 ? { items: [] } : data;
   }
 
   async listSubnetworks({ network, region }, fields, pageToken) {
     const request = removeUndefinedAndEmpty({
       auth: this.getAuthClient(),
       project: this.projectId,
-      filter: network ? `network="${network}"` : undefined,
+      filter: network && `network=${network}`,
       fields: parseFields(fields),
       maxResults: 500,
       region,
       pageToken,
     });
 
-    return (await compute.subnetworks.list(request)).data;
+    const { data } = await compute.subnetworks.list(request);
+    return Object.keys(data).length === 0 ? { items: [] } : data;
   }
 
   async listVms({ zone }, fields, pageToken) {

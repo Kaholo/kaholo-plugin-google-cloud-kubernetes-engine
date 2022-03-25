@@ -1,10 +1,13 @@
 function removeUndefinedAndEmpty(obj) {
+  if (!obj) {
+    return {};
+  }
   const resolvedObj = obj;
   Object.entries(resolvedObj).forEach(([key, value]) => {
     if (key === "auth") { return; }
     if (value === undefined) { delete resolvedObj[key]; }
     if (Array.isArray(value) && value.length === 0) { delete resolvedObj[key]; }
-    if (typeof (value) === "object") {
+    if (value && typeof (value) === "object") {
       removeUndefinedAndEmpty(value);
       if (Object.keys(value).length === 0) { delete resolvedObj[key]; }
     }
