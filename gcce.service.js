@@ -383,7 +383,7 @@ module.exports = class GoogleComputeService extends Compute {
       auth: this.getAuthClient(),
       project: this.projectId,
       fields: parseFields(fields),
-      filter: query && `name:${query}`,
+      filter: query ? `name:${query}` : undefined,
       maxResults: 500,
       pageToken,
     });
@@ -396,7 +396,7 @@ module.exports = class GoogleComputeService extends Compute {
     const request = removeUndefinedAndEmpty({
       auth: this.getAuthClient(),
       project: this.projectId,
-      filter: network && `network=${network}`,
+      filter: network ? `network=${network}` : undefined,
       fields: parseFields(fields),
       maxResults: 500,
       region,
