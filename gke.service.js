@@ -51,7 +51,7 @@ module.exports = class GKEService {
       clusterJson: removeUndefinedAndEmpty({
         name: clusterName,
         location: isZonal ? zone : region,
-        locations: isZonal ? [zone] : undefined,
+        ...(isZonal ? { locations: [zone] } : {}),
         releaseChannel: controlPlaneReleaseChannel === "none" ? undefined : {
           channel: controlPlaneReleaseChannel,
         },
@@ -134,12 +134,15 @@ module.exports = class GKEService {
     validateZoneParameter({ locationType, zone });
     const isZonal = locationType === "Zonal";
     const [operation] = await this.gke.createCluster({
-      parent: this.getLocationAsParent({ region, zone: isZonal ? zone : undefined }),
+      parent: this.getLocationAsParent({
+        region,
+        ...(isZonal ? { zone } : {}),
+      }),
       cluster: clusterJson,
-      zone: isZonal ? zone : undefined,
+      ...(isZonal ? { zone } : {}),
     });
     return waitForOperation ? this.waitForOperation({
-      zone: isZonal ? zone : undefined,
+      ...(isZonal ? { zone } : {}),
       region,
       operation,
     }) : operation;
