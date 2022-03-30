@@ -1,6 +1,7 @@
 const parsers = require("./parsers");
 const autocomplete = require("./autocomplete");
 const GKEService = require("./gke.service");
+const { prependHttps } = require("./helpers");
 
 async function createBasicCluster(action, settings) {
   const {
@@ -143,11 +144,9 @@ async function describeClusterCredentials(action, settings) {
     zone: parsers.autocomplete(zone),
     cluster: parsers.autocomplete(cluster),
   });
-
   return {
     certificateAuthority: describedCluster.masterAuth.clusterCaCertificate,
-    endpoint: describedCluster.endpoint,
-    accessToken: await client.gke.auth.getAccessToken(),
+    endpoint: prependHttps(describedCluster.endpoint),
   };
 }
 
