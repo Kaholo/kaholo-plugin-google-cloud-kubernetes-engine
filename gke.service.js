@@ -205,16 +205,14 @@ module.exports = class GKEService {
   }
 
   async describeCluster({ region, zone, cluster }) {
-    if (!cluster) {
-      throw new Error("Must provide a cluster to describe.");
-    }
     const parent = this.getClusterAsParent({ region, zone, cluster });
-    return (await this.gke.getCluster({
+    const [result] = await this.gke.getCluster({
       clusterId: cluster,
       projectId: this.options.projectId,
       parent,
       zone,
-    }))[0];
+    });
+    return result;
   }
 
   getClusterAsParent({ region, zone, cluster: clusterId }) {
