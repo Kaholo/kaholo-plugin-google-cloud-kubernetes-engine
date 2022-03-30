@@ -102,9 +102,6 @@ module.exports = class GoogleComputeService extends Compute {
         : saAccessScopes
     );
     const config = removeUndefinedAndEmpty({
-      ...(machineType ? {
-        machineType: `projects/${this.projectId}/zones/${resolvedZone}/machineTypes/${machineType}`,
-      } : {}),
       canIpForward,
       labels,
       description,
@@ -116,36 +113,39 @@ module.exports = class GoogleComputeService extends Compute {
       networkInterfaces: (
         network && subnetwork ? [{ network, subnetwork, networkIP }] : []
       ).concat(networkInterfaces || []),
-      ...(resolvedTags.length > 0 ? {
-        tags: { items: resolvedTags },
-      } : {}),
       disks: [{
         boot: true,
         initializeParams: {
           sourceImage,
-          ...(diskType ? {
-            diskType: `zones/${resolvedZone}/diskTypes/${diskType}`,
-          } : {}),
           diskSizeGb,
         },
         autoDelete: diskAutoDelete || false,
         mode: "READ_WRITE",
         type: "PERSISTENT",
       }],
-      ...(serviceAccount ? {
-        serviceAccounts: [{
-          email: serviceAccount,
-          scopes: saAccessScopes === "default" ? [
-            "https://www.googleapis.com/auth/devstorage.read_only",
-            "https://www.googleapis.com/auth/logging.write",
-            "https://www.googleapis.com/auth/monitoring.write",
-            "https://www.googleapis.com/auth/servicecontrol",
-            "https://www.googleapis.com/auth/service.management.readonly",
-            "https://www.googleapis.com/auth/trace.append",
-          ] : scopes,
-        }],
-      } : {}),
     });
+    if (diskType) {
+      config.disks[0].initializeParams.diskType = `zones/${resolvedZone}/diskTypes/${diskType}`;
+    }
+    if (resolvedTags.length > 0) {
+      config.tags = { items: resolvedTags };
+    }
+    if (serviceAccount) {
+      config.serviceAccounts = [{
+        email: serviceAccount,
+        scopes: saAccessScopes === "default" ? [
+          "https://www.googleapis.com/auth/devstorage.read_only",
+          "https://www.googleapis.com/auth/logging.write",
+          "https://www.googleapis.com/auth/monitoring.write",
+          "https://www.googleapis.com/auth/servicecontrol",
+          "https://www.googleapis.com/auth/service.management.readonly",
+          "https://www.googleapis.com/auth/trace.append",
+        ] : scopes,
+      }];
+    }
+    if (machineType) {
+      config.machineType = `projects/${this.projectId}/zones/${resolvedZone}/machineTypes/${machineType}`;
+    }
 
     if (autoCreateStaticIP) {
       const natIP = await this.autoCreateExtIp(region, name);

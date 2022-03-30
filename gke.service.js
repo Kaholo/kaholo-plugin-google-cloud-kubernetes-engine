@@ -47,11 +47,10 @@ module.exports = class GKEService {
     } = params;
     const isZonal = locationType === "Zonal";
     validateZoneParameter({ locationType, zone });
-    return this.createClusterJson({
+    const createClusterOptions = {
       clusterJson: removeUndefinedAndEmpty({
         name: clusterName,
         location: isZonal ? zone : region,
-        ...(isZonal ? { locations: [zone] } : {}),
         releaseChannel: controlPlaneReleaseChannel === "none" ? undefined : {
           channel: controlPlaneReleaseChannel,
         },
@@ -66,7 +65,11 @@ module.exports = class GKEService {
       region,
       locationType,
       waitForOperation,
-    });
+    };
+    if (isZonal) {
+      createClusterOptions.clusterJson.locations = [zone];
+    }
+    return this.createClusterJson(createClusterOptions);
   }
 
   static parseNodePool({
@@ -133,19 +136,28 @@ module.exports = class GKEService {
   }) {
     validateZoneParameter({ locationType, zone });
     const isZonal = locationType === "Zonal";
-    const [operation] = await this.gke.createCluster({
-      parent: this.getLocationAsParent({
-        region,
-        ...(isZonal ? { zone } : {}),
-      }),
+    const getLocationOptions = {
+      region,
+    };
+    if (isZonal) {
+      getLocationOptions.zone = zone;
+    }
+    const createClusterOptions = {
+      parent: this.getLocationAsParent(getLocationOptions),
       cluster: clusterJson,
-      ...(isZonal ? { zone } : {}),
-    });
-    return waitForOperation ? this.waitForOperation({
-      ...(isZonal ? { zone } : {}),
+    };
+    if (isZonal) {
+      createClusterOptions.zone = zone;
+    }
+    const [operation] = await this.gke.createCluster(createClusterOptions);
+    const waitOptions = {
       region,
       operation,
-    }) : operation;
+    };
+    if (isZonal) {
+      waitOptions.zone = zone;
+    }
+    return waitForOperation ? this.waitForOperation(waitOptions) : operation;
   }
 
   async createNodePool(params) {
@@ -164,16 +176,13 @@ module.exports = class GKEService {
   async createNodePoolJson({
     region, zone, cluster, nodePoolJson, waitForOperation,
   }) {
-    if (!cluster) {
-      throw new Error("Must provide a cluster to create the node pool for.");
-    }
     const parent = this.getClusterAsParent({ region, zone, cluster });
-    const operation = (await this.gke.createNodePool({
+    const [operation] = await this.gke.createNodePool({
       clusterId: cluster,
       nodePool: nodePoolJson,
       parent,
       zone,
-    }))[0];
+    });
     return waitForOperation ? this.waitForOperation({ zone, region, operation }) : operation;
   }
 
@@ -184,12 +193,12 @@ module.exports = class GKEService {
       throw new Error("Must provide a cluster to delete.");
     }
     const parent = this.getLocationAsParent({ region, zone });
-    const operation = (await this.gke.deleteCluster({
+    const [operation] = await this.gke.deleteCluster({
       clusterId: cluster,
       projectId: this.options.projectId,
       parent,
       zone,
-    }))[0];
+    });
     return waitForOperation ? this.waitForOperation({ zone, region, operation }) : operation;
   }
 
@@ -197,20 +206,17 @@ module.exports = class GKEService {
     region, zone, cluster, nodePool, waitForOperation,
   }) {
     const parent = this.getClusterAsParent({ region, zone, cluster });
-    const operation = (await this.gke.deleteNodePool({
+    const [operation] = await this.gke.deleteNodePool({
       clusterId: cluster,
       nodePoolId: nodePool,
       projectId: this.options.projectId,
       parent,
       zone,
-    }))[0];
+    });
     return waitForOperation ? this.waitForOperation({ zone, region, operation }) : operation;
   }
 
   async describeCluster({ region, zone, cluster }) {
-    if (!cluster) {
-      throw new Error("Must provide a cluster to describe.");
-    }
     const parent = this.getClusterAsParent({ region, zone, cluster });
     return (await this.gke.getCluster({
       clusterId: cluster,
@@ -234,9 +240,6 @@ module.exports = class GKEService {
   }
 
   async listNodePools({ region, zone, cluster }) {
-    if (!cluster) {
-      throw new Error("Must provide a cluster to list it's node pools.");
-    }
     const parent = this.getClusterAsParent({ region, zone, cluster });
     return (await this.gke.listNodePools({ clusterId: cluster, parent, zone }))[0].nodePools;
   }
