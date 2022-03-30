@@ -54,15 +54,14 @@ function listAuto(listFunc, fields, paging, noProject, parseFunc) {
   if (!resolvedParseFunc && resolvedFields) {
     resolvedParseFunc = getParseFromParam(...resolvedFields);
   }
-  return async (query, pluginSettings, triggerParameters) => {
-    let resolvedQuery = query;
+  return async (query, pluginSettings, actionParams) => {
+    const resolvedQuery = (query || "").trim();
     try {
-      const settings = mapAutoParams(pluginSettings); const
-        params = mapAutoParams(triggerParameters);
+      const settings = mapAutoParams(pluginSettings);
+      const params = mapAutoParams(actionParams);
       const client = GKEService.from(params, settings, noProject);
       const items = [];
       let nextPageToken;
-      resolvedQuery = (resolvedQuery || "").trim();
       params.query = resolvedQuery;
       // TODO: Remove awaits in loop
       // eslint-disable-next-line
@@ -127,4 +126,6 @@ module.exports = {
   listServiceAccountsAuto: listAuto("listServiceAccounts", ["email", "displayName"]),
   listMachineTypesAuto: listAuto("listMachineTypes", ["name"]),
   listMachineTypesWithCustomAuto,
+  listNetworks: listAuto("listNetworks"),
+  listSubnetworks: listAuto("listSubnetworks"),
 };

@@ -7,7 +7,7 @@ async function createBasicCluster(action, settings) {
   const {
     name, locationType, region, zone, controlPlaneReleaseChannel, version, numberOfNodes,
     enableAutoscaling, minNode, maxNode, machineType, nodeImage, diskType,
-    diskSize, diskEncryptionKey, waitForOperation,
+    diskSize, diskEncryptionKey, waitForOperation, network, subnetwork,
   } = action.params;
   const client = GKEService.from(action.params, settings);
   return client.createBasicCluster({
@@ -27,6 +27,8 @@ async function createBasicCluster(action, settings) {
     diskSize: parsers.number(diskSize),
     diskEncryptionKey: parsers.string(diskEncryptionKey),
     waitForOperation: parsers.boolean(waitForOperation),
+    network: parsers.autocomplete(network),
+    subnetwork: parsers.autocomplete(subnetwork),
   });
 }
 

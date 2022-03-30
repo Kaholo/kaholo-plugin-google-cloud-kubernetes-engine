@@ -12,9 +12,6 @@ module.exports = class GKEService {
     if (!credentials) {
       throw new Error("Credentials are required. Provide them either in the action's parameters or plugin's settings.");
     }
-    if (!projectId) {
-      throw new Error("Project is required. Provide it either in the action's parameters or plugin's settings.");
-    }
     if (typeof credentials !== "object") { throw new Error("Credentials provided in a bad format"); }
     this.options = { credentials };
     if (projectId) { this.options.projectId = projectId; }
@@ -46,14 +43,14 @@ module.exports = class GKEService {
     const {
       name: clusterName, locationType, region, zone,
       controlPlaneReleaseChannel, version, waitForOperation,
+      ...restParams
     } = params;
     const isZonal = locationType === "Zonal";
     validateZoneParameter({ locationType, zone });
-    return this.createClusterJson({
+    const createClusterOptions = {
       clusterJson: removeUndefinedAndEmpty({
         name: clusterName,
         location: isZonal ? zone : region,
-        locations: isZonal ? [zone] : undefined,
         releaseChannel: controlPlaneReleaseChannel === "none" ? undefined : {
           channel: controlPlaneReleaseChannel,
         },
@@ -62,12 +59,17 @@ module.exports = class GKEService {
           nodePoolName: "default-pool",
           ...params,
         })],
+        ...restParams,
       }),
       zone,
       region,
       locationType,
       waitForOperation,
-    });
+    };
+    if (isZonal) {
+      createClusterOptions.clusterJson.locations = [zone];
+    }
+    return this.createClusterJson(createClusterOptions);
   }
 
   static parseNodePool({
@@ -120,7 +122,7 @@ module.exports = class GKEService {
           autoRepair: true,
         },
         serviceAccount,
-        resolvedMachineType,
+        machineType: resolvedMachineType,
         labels,
         diskType,
         preemptible,
@@ -134,16 +136,28 @@ module.exports = class GKEService {
   }) {
     validateZoneParameter({ locationType, zone });
     const isZonal = locationType === "Zonal";
-    const operation = (await this.gke.createCluster({
-      parent: this.getLocationAsParent({ region, zone: isZonal ? zone : undefined }),
+    const getLocationOptions = {
+      region,
+    };
+    if (isZonal) {
+      getLocationOptions.zone = zone;
+    }
+    const createClusterOptions = {
+      parent: this.getLocationAsParent(getLocationOptions),
       cluster: clusterJson,
-      zone: isZonal ? zone : undefined,
-    }))[0];
-    return waitForOperation ? this.waitForOperation({
-      zone: isZonal ? zone : undefined,
+    };
+    if (isZonal) {
+      createClusterOptions.zone = zone;
+    }
+    const [operation] = await this.gke.createCluster(createClusterOptions);
+    const waitOptions = {
       region,
       operation,
-    }) : operation;
+    };
+    if (isZonal) {
+      waitOptions.zone = zone;
+    }
+    return waitForOperation ? this.waitForOperation(waitOptions) : operation;
   }
 
   async createNodePool(params) {
@@ -162,16 +176,13 @@ module.exports = class GKEService {
   async createNodePoolJson({
     region, zone, cluster, nodePoolJson, waitForOperation,
   }) {
-    if (!cluster) {
-      throw new Error("Must provide a cluster to create the node pool for.");
-    }
     const parent = this.getClusterAsParent({ region, zone, cluster });
-    const operation = (await this.gke.createNodePool({
+    const [operation] = await this.gke.createNodePool({
       clusterId: cluster,
       nodePool: nodePoolJson,
       parent,
       zone,
-    }))[0];
+    });
     return waitForOperation ? this.waitForOperation({ zone, region, operation }) : operation;
   }
 
@@ -182,12 +193,12 @@ module.exports = class GKEService {
       throw new Error("Must provide a cluster to delete.");
     }
     const parent = this.getLocationAsParent({ region, zone });
-    const operation = (await this.gke.deleteCluster({
+    const [operation] = await this.gke.deleteCluster({
       clusterId: cluster,
       projectId: this.options.projectId,
       parent,
       zone,
-    }))[0];
+    });
     return waitForOperation ? this.waitForOperation({ zone, region, operation }) : operation;
   }
 
@@ -195,13 +206,13 @@ module.exports = class GKEService {
     region, zone, cluster, nodePool, waitForOperation,
   }) {
     const parent = this.getClusterAsParent({ region, zone, cluster });
-    const operation = (await this.gke.deleteNodePool({
+    const [operation] = await this.gke.deleteNodePool({
       clusterId: cluster,
       nodePoolId: nodePool,
       projectId: this.options.projectId,
       parent,
       zone,
-    }))[0];
+    });
     return waitForOperation ? this.waitForOperation({ zone, region, operation }) : operation;
   }
 
@@ -230,9 +241,6 @@ module.exports = class GKEService {
   }
 
   async listNodePools({ region, zone, cluster }) {
-    if (!cluster) {
-      throw new Error("Must provide a cluster to list it's node pools.");
-    }
     const parent = this.getClusterAsParent({ region, zone, cluster });
     return (await this.gke.listNodePools({ clusterId: cluster, parent, zone }))[0].nodePools;
   }
@@ -252,11 +260,19 @@ module.exports = class GKEService {
   async listMachineTypes({ zone }, fields, pageToken) {
     let resolvedZone = zone;
     if (!resolvedZone) { resolvedZone = "us-central1-c"; }
-    return this.gcce.listMachineTypes({ resolvedZone }, fields, pageToken);
+    return this.gcce.listMachineTypes({ zone: resolvedZone }, fields, pageToken);
   }
 
   async listServiceAccounts() {
     return this.gcce.listServiceAccounts({});
+  }
+
+  listNetworks(...args) {
+    return this.gcce.listNetworks(...args);
+  }
+
+  listSubnetworks(...args) {
+    return this.gcce.listSubnetworks(...args);
   }
 
   async waitForOperation({ region, zone, operation }) {

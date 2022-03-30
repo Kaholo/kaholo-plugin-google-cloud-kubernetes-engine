@@ -102,7 +102,6 @@ module.exports = class GoogleComputeService extends Compute {
         : saAccessScopes
     );
     const config = removeUndefinedAndEmpty({
-      machineType: machineType ? `projects/${this.projectId}/zones/${resolvedZone}/machineTypes/${machineType}` : undefined,
       canIpForward,
       labels,
       description,
@@ -114,19 +113,25 @@ module.exports = class GoogleComputeService extends Compute {
       networkInterfaces: (
         network && subnetwork ? [{ network, subnetwork, networkIP }] : []
       ).concat(networkInterfaces || []),
-      tags: resolvedTags.length > 0 ? { items: resolvedTags } : undefined,
       disks: [{
         boot: true,
         initializeParams: {
           sourceImage,
-          diskType: diskType ? `zones/${resolvedZone}/diskTypes/${diskType}` : undefined,
           diskSizeGb,
         },
         autoDelete: diskAutoDelete || false,
         mode: "READ_WRITE",
         type: "PERSISTENT",
       }],
-      serviceAccounts: serviceAccount ? [{
+    });
+    if (diskType) {
+      config.disks[0].initializeParams.diskType = `zones/${resolvedZone}/diskTypes/${diskType}`;
+    }
+    if (resolvedTags.length > 0) {
+      config.tags = { items: resolvedTags };
+    }
+    if (serviceAccount) {
+      config.serviceAccounts = [{
         email: serviceAccount,
         scopes: saAccessScopes === "default" ? [
           "https://www.googleapis.com/auth/devstorage.read_only",
@@ -134,10 +139,13 @@ module.exports = class GoogleComputeService extends Compute {
           "https://www.googleapis.com/auth/monitoring.write",
           "https://www.googleapis.com/auth/servicecontrol",
           "https://www.googleapis.com/auth/service.management.readonly",
-          "https://www.googleapis.com/auth/trace.append"]
-          : scopes,
-      }] : undefined,
-    });
+          "https://www.googleapis.com/auth/trace.append",
+        ] : scopes,
+      }];
+    }
+    if (machineType) {
+      config.machineType = `projects/${this.projectId}/zones/${resolvedZone}/machineTypes/${machineType}`;
+    }
 
     if (autoCreateStaticIP) {
       const natIP = await this.autoCreateExtIp(region, name);
@@ -300,8 +308,10 @@ module.exports = class GoogleComputeService extends Compute {
   async listProjects({ query }) {
     const request = removeUndefinedAndEmpty({
       auth: this.getAuthClient(),
-      filter: query ? `name:*${query}* id:*${query}*` : undefined,
     });
+    if (query) {
+      request.filter = `name:*${query}* id:*${query}*`;
+    }
     return (await cloudresourcemanager.projects.list(request)).data.projects;
   }
 
@@ -378,7 +388,7 @@ module.exports = class GoogleComputeService extends Compute {
     return (await iam.projects.serviceAccounts.list(request)).data.accounts;
   }
 
-  async listNetworks(_, fields, pageToken) {
+  async listNetworks({ query }, fields, pageToken) {
     const request = removeUndefinedAndEmpty({
       auth: this.getAuthClient(),
       project: this.projectId,
@@ -386,22 +396,29 @@ module.exports = class GoogleComputeService extends Compute {
       maxResults: 500,
       pageToken,
     });
+    if (query) {
+      request.filter = `name:${query}`;
+    }
 
-    return (await compute.networks.list(request)).data;
+    const { data } = await compute.networks.list(request);
+    return Object.keys(data).length === 0 ? { items: [] } : data;
   }
 
   async listSubnetworks({ network, region }, fields, pageToken) {
     const request = removeUndefinedAndEmpty({
       auth: this.getAuthClient(),
       project: this.projectId,
-      filter: network ? `network="${network}"` : undefined,
       fields: parseFields(fields),
       maxResults: 500,
       region,
       pageToken,
     });
+    if (network) {
+      request.filter = `network=${network}`;
+    }
 
-    return (await compute.subnetworks.list(request)).data;
+    const { data } = await compute.subnetworks.list(request);
+    return Object.keys(data).length === 0 ? { items: [] } : data;
   }
 
   async listVms({ zone }, fields, pageToken) {
