@@ -12,6 +12,10 @@ function removeUndefinedAndEmpty(obj) {
   return resolvedObj;
 }
 
+const prependHttps = (value) => (
+  value.startsWith("https://") ? value : `https://${value}`
+);
+
 /**
  * Return a promise that responds to events from the specified operation
  * @param {Compute.Operation} operation The operation to make the promise for.
@@ -79,4 +83,5 @@ module.exports = {
   handleOperation,
   parseFields,
   sleep,
+  prependHttps,
 };
