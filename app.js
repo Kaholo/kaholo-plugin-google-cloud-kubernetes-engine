@@ -5,10 +5,11 @@ const { prependHttps } = require("./helpers");
 
 async function createBasicCluster(action, settings) {
   const {
-    name, locationType, region, zone, controlPlaneReleaseChannel, version, numberOfNodes,
+    name, locationType, zone, controlPlaneReleaseChannel, version, numberOfNodes,
     enableAutoscaling, minNode, maxNode, machineType, nodeImage, diskType,
     diskSize, diskEncryptionKey, waitForOperation, network, subnetwork,
   } = action.params;
+  const region = action.params.region || settings.region;
   const client = GKEService.from(action.params, settings);
   return client.createBasicCluster({
     name: parsers.string(name),
@@ -34,8 +35,9 @@ async function createBasicCluster(action, settings) {
 
 async function createClusterJson(action, settings) {
   const {
-    locationType, region, zone, clusterJson, waitForOperation,
+    locationType, zone, clusterJson, waitForOperation,
   } = action.params;
+  const region = action.params.region || settings.region;
   const client = GKEService.from(action.params, settings);
   return client.createClusterJson({
     locationType,
@@ -48,12 +50,13 @@ async function createClusterJson(action, settings) {
 
 async function createNodePool(action, settings) {
   const {
-    region, zone, cluster, name, numberOfNodes, enableAutoscaling,
+    zone, cluster, name, numberOfNodes, enableAutoscaling,
     minNode, maxNode, maxSurge, maxUnavailable, machineType, customMachineCpuCount,
     customMachineMem, nodeImage, diskType, diskSize, diskEncryptionKey, preemptible,
     maxPodsPerNode, networkTags, serviceAccount, saAccessScopes, enableIntegrityMonitoring,
     enableSecureBoot, labels, gceInstanceMetadata, version, waitForOperation,
   } = action.params;
+  const region = action.params.region || settings.region;
   const client = GKEService.from(action.params, settings);
   return client.createNodePool({
     region: parsers.autocomplete(region),
@@ -89,8 +92,9 @@ async function createNodePool(action, settings) {
 
 async function createNodePoolJson(action, settings) {
   const {
-    region, zone, cluster, nodePoolJson, waitForOperation,
+    zone, cluster, nodePoolJson, waitForOperation,
   } = action.params;
+  const region = action.params.region || settings.region;
   const client = GKEService.from(action.params, settings);
   return client.createNodePoolJson({
     region: parsers.autocomplete(region),
@@ -103,8 +107,9 @@ async function createNodePoolJson(action, settings) {
 
 async function deleteCluster(action, settings) {
   const {
-    region, zone, cluster, waitForOperation,
+    zone, cluster, waitForOperation,
   } = action.params;
+  const region = action.params.region || settings.region;
   const client = GKEService.from(action.params, settings);
   return client.deleteCluster({
     region: parsers.autocomplete(region),
@@ -116,8 +121,9 @@ async function deleteCluster(action, settings) {
 
 async function deleteNodePool(action, settings) {
   const {
-    region, zone, cluster, nodePool, waitForOperation,
+    zone, cluster, nodePool, waitForOperation,
   } = action.params;
+  const region = action.params.region || settings.region;
   const client = GKEService.from(action.params, settings);
   return client.deleteNodePool({
     region: parsers.autocomplete(region),
@@ -129,7 +135,8 @@ async function deleteNodePool(action, settings) {
 }
 
 async function describeCluster(action, settings) {
-  const { region, zone, cluster } = action.params;
+  const { zone, cluster } = action.params;
+  const region = action.params.region || settings.region;
   const client = GKEService.from(action.params, settings);
   return client.describeCluster({
     region: parsers.autocomplete(region),
@@ -139,7 +146,8 @@ async function describeCluster(action, settings) {
 }
 
 async function describeClusterCredentials(action, settings) {
-  const { region, zone, cluster } = action.params;
+  const { zone, cluster } = action.params;
+  const region = action.params.region || settings.region;
   const client = GKEService.from(action.params, settings);
   const describedCluster = await client.describeCluster({
     region: parsers.autocomplete(region),
@@ -153,7 +161,8 @@ async function describeClusterCredentials(action, settings) {
 }
 
 async function listClusters(action, settings) {
-  const { region, zone } = action.params;
+  const { zone } = action.params;
+  const region = action.params.region || settings.region;
   const client = GKEService.from(action.params, settings);
   return client.listClusters({
     region: parsers.autocomplete(region),
@@ -162,7 +171,8 @@ async function listClusters(action, settings) {
 }
 
 async function listNodePools(action, settings) {
-  const { region, zone, cluster } = action.params;
+  const { zone, cluster } = action.params;
+  const region = action.params.region || settings.region;
   const client = GKEService.from(action.params, settings);
   return client.listNodePools({
     region: parsers.autocomplete(region),
