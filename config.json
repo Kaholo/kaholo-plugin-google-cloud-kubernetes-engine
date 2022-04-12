@@ -96,7 +96,7 @@
         {
           "name": "region",
           "viewName": "Region",
-          "required": true,
+          "required": false,
           "type": "autocomplete",
           "autocompleteType": "function",
           "functionName": "listRegionsAuto",
@@ -345,7 +345,7 @@
         {
           "name": "region",
           "viewName": "Region",
-          "required": true,
+          "required": false,
           "type": "autocomplete",
           "autocompleteType": "function",
           "functionName": "listRegionsAuto",
@@ -405,7 +405,7 @@
         {
           "name": "region",
           "viewName": "Region",
-          "required": true,
+          "required": false,
           "type": "autocomplete",
           "autocompleteType": "function",
           "functionName": "listRegionsAuto",
@@ -725,7 +725,7 @@
         {
           "name": "region",
           "viewName": "Region",
-          "required": true,
+          "required": false,
           "type": "autocomplete",
           "autocompleteType": "function",
           "functionName": "listRegionsAuto",
@@ -796,7 +796,7 @@
         {
           "name": "region",
           "viewName": "Region",
-          "required": true,
+          "required": false,
           "type": "autocomplete",
           "autocompleteType": "function",
           "functionName": "listRegionsAuto",
@@ -858,7 +858,7 @@
         {
           "name": "region",
           "viewName": "Region",
-          "required": true,
+          "required": false,
           "type": "autocomplete",
           "autocompleteType": "function",
           "functionName": "listRegionsAuto",
@@ -931,7 +931,7 @@
         {
           "name": "region",
           "viewName": "Region",
-          "required": true,
+          "required": false,
           "type": "autocomplete",
           "autocompleteType": "function",
           "functionName": "listRegionsAuto",
@@ -986,7 +986,7 @@
         {
           "name": "region",
           "viewName": "Region",
-          "required": true,
+          "required": false,
           "type": "autocomplete",
           "autocompleteType": "function",
           "functionName": "listRegionsAuto",
@@ -1041,7 +1041,7 @@
         {
           "name": "region",
           "viewName": "Region",
-          "required": true,
+          "required": false,
           "type": "autocomplete",
           "autocompleteType": "function",
           "functionName": "listRegionsAuto",
@@ -1085,7 +1085,7 @@
         {
           "name": "region",
           "viewName": "Region",
-          "required": true,
+          "required": false,
           "type": "autocomplete",
           "autocompleteType": "function",
           "functionName": "listRegionsAuto",
