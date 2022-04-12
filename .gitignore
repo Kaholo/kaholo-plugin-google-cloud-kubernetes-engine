@@ -1,6 +1,9 @@
 ## this is a default node.js .gitignore
 ## from https://github.com/github/gitignore/blob/main/Node.gitignore
 
+# Zip files
+*.zip
+
 # Logs
 logs
 *.log
