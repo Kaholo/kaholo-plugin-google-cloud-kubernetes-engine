@@ -6,7 +6,7 @@
   "execProgram": "node",
   "main": "app.js",
   "imgUrl": "logo.png",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Kaholo plugin for integration with Google Cloud Kubernetes Engine(GKE).",
   "category": ["CLOUD", "CONTAINERS"],
   "keywords": ["GCP", "kubernetes", "k8s", "gke", "google", "container", "pod", "node", "pool", "cloud", "cluster", "docker", "deployment"],
@@ -96,7 +96,7 @@
         {
           "name": "region",
           "viewName": "Region",
-          "required": true,
+          "required": false,
           "type": "autocomplete",
           "autocompleteType": "function",
           "functionName": "listRegionsAuto",
@@ -121,7 +121,6 @@
           "autocompleteType": "function",
           "functionName": "listNetworks",
           "description": "The name of the Google Compute Engine network to which the cluster is connected. If left unspecified, the default network will be used.",
-          "default": "default",
           "learnUrl": "https://cloud.google.com/vpc/docs/vpc#networks"
         },
         {
@@ -346,7 +345,7 @@
         {
           "name": "region",
           "viewName": "Region",
-          "required": true,
+          "required": false,
           "type": "autocomplete",
           "autocompleteType": "function",
           "functionName": "listRegionsAuto",
@@ -406,7 +405,7 @@
         {
           "name": "region",
           "viewName": "Region",
-          "required": true,
+          "required": false,
           "type": "autocomplete",
           "autocompleteType": "function",
           "functionName": "listRegionsAuto",
@@ -726,7 +725,7 @@
         {
           "name": "region",
           "viewName": "Region",
-          "required": true,
+          "required": false,
           "type": "autocomplete",
           "autocompleteType": "function",
           "functionName": "listRegionsAuto",
@@ -797,7 +796,7 @@
         {
           "name": "region",
           "viewName": "Region",
-          "required": true,
+          "required": false,
           "type": "autocomplete",
           "autocompleteType": "function",
           "functionName": "listRegionsAuto",
@@ -859,7 +858,7 @@
         {
           "name": "region",
           "viewName": "Region",
-          "required": true,
+          "required": false,
           "type": "autocomplete",
           "autocompleteType": "function",
           "functionName": "listRegionsAuto",
@@ -932,7 +931,7 @@
         {
           "name": "region",
           "viewName": "Region",
-          "required": true,
+          "required": false,
           "type": "autocomplete",
           "autocompleteType": "function",
           "functionName": "listRegionsAuto",
@@ -987,7 +986,7 @@
         {
           "name": "region",
           "viewName": "Region",
-          "required": true,
+          "required": false,
           "type": "autocomplete",
           "autocompleteType": "function",
           "functionName": "listRegionsAuto",
@@ -1042,7 +1041,7 @@
         {
           "name": "region",
           "viewName": "Region",
-          "required": true,
+          "required": false,
           "type": "autocomplete",
           "autocompleteType": "function",
           "functionName": "listRegionsAuto",
@@ -1086,7 +1085,7 @@
         {
           "name": "region",
           "viewName": "Region",
-          "required": true,
+          "required": false,
           "type": "autocomplete",
           "autocompleteType": "function",
           "functionName": "listRegionsAuto",
