@@ -6,10 +6,24 @@
   "execProgram": "node",
   "main": "app.js",
   "imgUrl": "logo.png",
-  "version": "1.1.1",
-  "description": "Kaholo plugin for integration with Google Cloud Kubernetes Engine(GKE).",
-  "category": ["CLOUD", "CONTAINERS"],
-  "keywords": ["GCP", "kubernetes", "k8s", "gke", "google", "container", "pod", "node", "pool", "cloud", "cluster", "docker", "deployment"],
+  "version": "1.1.2",
+  "description": "Google Cloud Kubernetes Engine (GKE)",
+  "category": ["Containers"],
+  "keywords": [
+    "gcp",
+    "kubernetes",
+    "k8s",
+    "gke",
+    "google",
+    "container",
+    "pod",
+    "node",
+    "pool",
+    "cloud",
+    "cluster",
+    "docker",
+    "deployment"
+  ],
   "settings": [
     {
       "name": "creds",
