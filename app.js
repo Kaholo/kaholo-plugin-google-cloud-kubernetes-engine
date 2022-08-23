@@ -2,7 +2,7 @@ const {
   helpers: {
     temporaryFileSentinel,
   },
-} = require('@kaholo/plugin-library');
+} = require("@kaholo/plugin-library");
 
 const parsers = require("./parsers");
 const autocomplete = require("./autocomplete");
@@ -190,38 +190,45 @@ async function listNodePools(action, settings) {
 
 async function createServiceAccount(action, settings) {
   const tokenKey = action.params.creds || settings.creds;
-  const params = {
-    zone: action.params.zone || settings.zone,
-    project: (action.params.project || settings.project)?.value,
-    namespace: action.params.namespace || settings.namespace,
-    accountName: action.params.accountName || settings.accountName,
-    roleBindingName: action.params.roleBindingName || settings.roleBindingName,
-    clusterRole: action.params.clusterRole || settings.clusterRole,
-  };
+  const zone = action.params.zone || settings.zone;
+  const project = (action.params.project || settings.project)?.value;
+  const namespace = action.params.namespace || settings.namespace;
+  const accountName = action.params.accountName || settings.accountName;
+  const roleBindingName = action.params.roleBindingName || settings.roleBindingName;
+  const clusterRole = action.params.clusterRole || settings.clusterRole;
 
   let result = null;
   await temporaryFileSentinel(
     [tokenKey],
     async (keyFilePath) => {
       const tokenName = await gcloudCli.createServiceAccount({
-        ...params, //TODO replace with concrete params
+        zone,
+        project,
+        namespace,
+        accountName,
+        roleBindingName,
+        clusterRole,
         keyFilePath,
       });
 
       const token = await gcloudCli.lookupToken({
-        ...params,
+        zone,
+        project,
+        namespace,
         keyFilePath,
         tokenName,
       });
 
       const certificateAndEndpoint = await gcloudCli.lookupCertAndEndpoint({
-        ...params,
+        zone,
+        project,
+        namespace,
         keyFilePath,
       });
 
       result = {
-        serviceAccountNamespace: params.namespace,
-        serviceAccountName: params.accountName,
+        serviceAccountNamespace: namespace,
+        serviceAccountName: accountName,
         token,
         clusterEndpoint: certificateAndEndpoint.endpoint,
         clusterCertificate: certificateAndEndpoint.certificate,
