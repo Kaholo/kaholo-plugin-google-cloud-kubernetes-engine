@@ -1,3 +1,5 @@
+const path = require("path");
+
 function removeUndefinedAndEmpty(obj) {
   if (!obj) {
     return {};
@@ -79,6 +81,13 @@ function validateZoneParameter({ locationType, zone }) {
   }
 }
 
+function splitDirectory(directory) {
+  return [
+    path.dirname(directory),
+    path.basename(directory),
+  ];
+}
+
 module.exports = {
   validateZoneParameter,
   removeUndefinedAndEmpty,
@@ -87,4 +96,5 @@ module.exports = {
   parseFields,
   sleep,
   prependHttps,
+  splitDirectory,
 };

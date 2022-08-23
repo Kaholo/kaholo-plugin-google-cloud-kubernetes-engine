@@ -1129,6 +1129,54 @@
           "learnUrl": "https://cloud.google.com/kubernetes-engine/docs/concepts/cluster-architecture"
         }
       ]
+    },
+    {
+      "name": "createServiceAccount",
+      "viewName": "Create Service Account",
+      "params": [
+        {
+          "name": "creds",
+          "viewName": "Default Service Account Credentials",
+          "type": "vault",
+          "description": "Vaulted JSON document containing service account credentials as provided by GCP",
+          "learnUrl": "https://cloud.google.com/docs/authentication/production"
+        },
+        {
+          "name": "zone",
+          "viewName": "Zone",
+          "type": "string"
+        },
+        {
+          "name": "project",
+          "viewName": "Project",
+          "type": "autocomplete",
+          "autocompleteType": "function",
+          "functionName": "listProjectsAuto",
+          "description": "GCP Project defines how your app interacts with services and resources",
+          "placeholder": "select using autocomplete",
+          "learnUrl": "https://cloud.google.com/resource-manager/docs/creating-managing-projects"
+        },
+        {
+          "name": "namespace",
+          "viewName": "Namespace",
+          "type": "string"
+        },
+        {
+          "name": "accountName",
+          "viewName": "AccountName",
+          "type": "string"
+        },
+        {
+          "name": "roleBindingName",
+          "viewName": "RoleBindingName",
+          "type": "string"
+        },
+        {
+          "name": "clusterRole",
+          "viewName": "ClusterRole",
+          "type": "string"
+        }
+      ]
     }
   ]
 }

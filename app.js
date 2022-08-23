@@ -1,7 +1,14 @@
+const {
+  helpers: {
+    temporaryFileSentinel,
+  },
+} = require('@kaholo/plugin-library');
+
 const parsers = require("./parsers");
 const autocomplete = require("./autocomplete");
 const GKEService = require("./gke.service");
 const { prependHttps } = require("./helpers");
+const gcloudCli = require("./gcloud-cli");
 
 async function createBasicCluster(action, settings) {
   const {
@@ -181,6 +188,50 @@ async function listNodePools(action, settings) {
   });
 }
 
+async function createServiceAccount(action, settings) {
+  const tokenKey = action.params.creds || settings.creds;
+  const params = {
+    zone: action.params.zone || settings.zone,
+    project: (action.params.project || settings.project)?.value,
+    namespace: action.params.namespace || settings.namespace,
+    accountName: action.params.accountName || settings.accountName,
+    roleBindingName: action.params.roleBindingName || settings.roleBindingName,
+    clusterRole: action.params.clusterRole || settings.clusterRole,
+  };
+
+  let result = null;
+  await temporaryFileSentinel(
+    [tokenKey],
+    async (keyFilePath) => {
+      const tokenName = await gcloudCli.createServiceAccount({
+        ...params, //TODO replace with concrete params
+        keyFilePath,
+      });
+
+      const token = await gcloudCli.lookupToken({
+        ...params,
+        keyFilePath,
+        tokenName,
+      });
+
+      const certificateAndEndpoint = await gcloudCli.lookupCertAndEndpoint({
+        ...params,
+        keyFilePath,
+      });
+
+      result = {
+        serviceAccountNamespace: params.namespace,
+        serviceAccountName: params.accountName,
+        token,
+        clusterEndpoint: certificateAndEndpoint.endpoint,
+        clusterCertificate: certificateAndEndpoint.certificate,
+      };
+    },
+  );
+
+  return result;
+}
+
 module.exports = {
   createBasicCluster,
   createClusterJson,
@@ -192,6 +243,7 @@ module.exports = {
   describeClusterCredentials,
   listClusters,
   listNodePools,
+  createServiceAccount,
   // Autocomplete Functions
   ...autocomplete,
 };

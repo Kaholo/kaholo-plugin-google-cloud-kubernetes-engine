@@ -12,6 +12,7 @@
   "dependencies": {
     "@google-cloud/compute": "^2.5.0",
     "@google-cloud/container": "^2.4.0",
+    "@kaholo/plugin-library": "^2.1.0",
     "google-auth-library": "^7.10.3",
     "googleapis": "^92.0.0"
   },
