@@ -170,7 +170,7 @@ function extractTagValue(result, tag) {
   const tagStartIndex = result.indexOf(tag);
   const resultStartingWithTag = result.slice(tagStartIndex + tag.length).trim();
 
-  const tagEndIndex = resultStartingWithTag.indexOf(" ");
+  const tagEndIndex = resultStartingWithTag.indexOf("\n");
   const tagValue = tagEndIndex < 0
     ? resultStartingWithTag
     : resultStartingWithTag.slice(0, tagEndIndex + 1).trim();
