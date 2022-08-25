@@ -24,20 +24,20 @@ async function createServiceAccount(params) {
         zone: zoneVarName,
         project: projectVarName,
         namespace: namespaceVarName,
-        accountName: accountNameVarName,
+        serviceAccountName: serviceAccountNameVarName,
         roleBindingName: roleBindingNameVarName,
-        clusterRole: clusterRoleVarName,
+        clusterRoleName: clusterRoleNameVarName,
       } = environmentalVariablesNames;
 
       const accountCreationCommand = namespaceVarName
         ? `\
 kubectl create namespace $${namespaceVarName} ; \
-kubectl create serviceaccount $${accountNameVarName} --namespace $${namespaceVarName} ; \
-kubectl create rolebinding $${roleBindingNameVarName} --clusterrole=$${clusterRoleVarName} \
---serviceaccount=$${namespaceVarName}:$${accountNameVarName} --namespace=$${namespaceVarName}`
+kubectl create serviceaccount $${serviceAccountNameVarName} --namespace $${namespaceVarName} ; \
+kubectl create rolebinding $${roleBindingNameVarName} --clusterrole=$${clusterRoleNameVarName} \
+--serviceaccount=$${namespaceVarName}:$${serviceAccountNameVarName} --namespace=$${namespaceVarName}`
         : `\
-kubectl create serviceaccount $${accountNameVarName} ; \
-kubectl create clusterrolebinding $${roleBindingNameVarName} --clusterrole=$${clusterRoleVarName} --serviceaccount=default:$${accountNameVarName}`;
+kubectl create serviceaccount $${serviceAccountNameVarName} ; \
+kubectl create clusterrolebinding $${roleBindingNameVarName} --clusterrole=$${clusterRoleNameVarName} --serviceaccount=default:$${serviceAccountNameVarName}`;
 
       return `\
 sh -c "\
@@ -45,7 +45,7 @@ gcloud auth activate-service-account --key-file=$${keyPathVolumeDefinition.mount
 gcloud container clusters get-credentials test-cluster-auto --zone=$${zoneVarName} --project=$${projectVarName} && \
 $${accountCreationCommand} ; \
 kubectl config set-context --current --namespace=$${namespaceVarName} ; \
-kubectl describe serviceaccount $${accountNameVarName}
+kubectl describe serviceaccount $${serviceAccountNameVarName}
 "`; // kubectl commands may fail if the object exists, that's why we execute no matter what
     },
   );

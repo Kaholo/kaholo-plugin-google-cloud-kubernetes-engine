@@ -193,9 +193,9 @@ async function createServiceAccount(action, settings) {
   const zone = action.params.zone || settings.zone;
   const project = (action.params.project || settings.project)?.value;
   const namespace = action.params.namespace || settings.namespace;
-  const accountName = action.params.accountName || settings.accountName;
+  const serviceAccountName = action.params.serviceAccountName || settings.serviceAccountName;
   const roleBindingName = action.params.roleBindingName || settings.roleBindingName;
-  const clusterRole = action.params.clusterRole || settings.clusterRole;
+  const clusterRoleName = action.params.clusterRoleName || settings.clusterRoleName;
 
   let result = null;
   await temporaryFileSentinel(
@@ -205,9 +205,9 @@ async function createServiceAccount(action, settings) {
         zone,
         project,
         namespace,
-        accountName,
+        serviceAccountName,
         roleBindingName,
-        clusterRole,
+        clusterRoleName,
         keyFilePath,
       });
 
@@ -228,7 +228,7 @@ async function createServiceAccount(action, settings) {
 
       result = {
         serviceAccountNamespace: namespace,
-        serviceAccountName: accountName,
+        serviceAccountName,
         token,
         clusterEndpoint: certificateAndEndpoint.endpoint,
         clusterCertificate: certificateAndEndpoint.certificate,
