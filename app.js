@@ -1,7 +1,14 @@
+const {
+  helpers: {
+    temporaryFileSentinel,
+  },
+} = require("@kaholo/plugin-library");
+
 const parsers = require("./parsers");
 const autocomplete = require("./autocomplete");
 const GKEService = require("./gke.service");
 const { prependHttps } = require("./helpers");
+const gcloudCli = require("./gcloud-cli");
 
 async function createBasicCluster(action, settings) {
   const {
@@ -181,6 +188,57 @@ async function listNodePools(action, settings) {
   });
 }
 
+async function createServiceAccount(action, settings) {
+  const tokenKey = action.params.creds || settings.creds;
+  const zone = action.params.zone || settings.zone;
+  const project = (action.params.project || settings.project)?.value;
+  const namespace = action.params.namespace || settings.namespace;
+  const serviceAccountName = action.params.serviceAccountName || settings.serviceAccountName;
+  const roleBindingName = action.params.roleBindingName || settings.roleBindingName;
+  const clusterRoleName = action.params.clusterRoleName || settings.clusterRoleName;
+
+  let result = null;
+  await temporaryFileSentinel(
+    [tokenKey],
+    async (keyFilePath) => {
+      const tokenName = await gcloudCli.createServiceAccount({
+        zone,
+        project,
+        namespace,
+        serviceAccountName,
+        roleBindingName,
+        clusterRoleName,
+        keyFilePath,
+      });
+
+      const token = await gcloudCli.lookupToken({
+        zone,
+        project,
+        namespace,
+        keyFilePath,
+        tokenName,
+      });
+
+      const certificateAndEndpoint = await gcloudCli.lookupCertAndEndpoint({
+        zone,
+        project,
+        namespace,
+        keyFilePath,
+      });
+
+      result = {
+        serviceAccountNamespace: namespace,
+        serviceAccountName,
+        token,
+        clusterEndpoint: certificateAndEndpoint.endpoint,
+        clusterCertificate: certificateAndEndpoint.certificate,
+      };
+    },
+  );
+
+  return result;
+}
+
 module.exports = {
   createBasicCluster,
   createClusterJson,
@@ -192,6 +250,7 @@ module.exports = {
   describeClusterCredentials,
   listClusters,
   listNodePools,
+  createServiceAccount,
   // Autocomplete Functions
   ...autocomplete,
 };

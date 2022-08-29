@@ -1120,13 +1120,75 @@
         {
           "name": "cluster",
           "viewName": "Cluster",
-          "required": true,
           "type": "autocomplete",
           "autocompleteType": "function",
+          "required": true,
           "functionName": "listClustersAuto",
           "description": "The cluster containing the node pools to be listed",
           "placeholder": "select using autocomplete",
           "learnUrl": "https://cloud.google.com/kubernetes-engine/docs/concepts/cluster-architecture"
+        }
+      ]
+    },
+    {
+      "name": "createServiceAccount",
+      "viewName": "Create Service Account",
+      "params": [
+        {
+          "name": "creds",
+          "viewName": "Default Service Account Credentials",
+          "type": "vault",
+          "required": true,
+          "description": "Vaulted JSON document containing service account credentials as provided by GCP",
+          "learnUrl": "https://cloud.google.com/docs/authentication/production"
+        },
+        {
+          "name": "zone",
+          "viewName": "Zone/Region",
+          "type": "string",
+          "required": true,
+          "description": "Zone or Region name where the operation is performed",
+          "learnUrl": "https://cloud.google.com/compute/docs/regions-zones"
+        },
+        {
+          "name": "project",
+          "viewName": "Project",
+          "type": "autocomplete",
+          "required": true,
+          "autocompleteType": "function",
+          "functionName": "listProjectsAuto",
+          "description": "GCP Project defines how your app interacts with services and resources",
+          "placeholder": "select using autocomplete",
+          "learnUrl": "https://cloud.google.com/resource-manager/docs/creating-managing-projects"
+        },
+        {
+          "name": "namespace",
+          "viewName": "Namespace",
+          "type": "string"
+        },
+        {
+          "name": "serviceAccountName",
+          "viewName": "Service Account name",
+          "type": "string",
+          "required": true,
+          "description": "Name of the new Service Account",
+          "learnUrl": "https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/"
+        },
+        {
+          "name": "roleBindingName",
+          "viewName": "Role Binding name",
+          "type": "string",
+          "required": true,
+          "description": "Name which labels the Role Binding to use",
+          "learnUrl": "https://kubernetes.io/docs/reference/access-authn-authz/rbac/"
+        },
+        {
+          "name": "clusterRoleName",
+          "viewName": "Cluster Role name",
+          "type": "string",
+          "required": true,
+          "description": "Name which labels the Cluster Role to use",
+          "learnUrl": "https://kubernetes.io/docs/reference/access-authn-authz/rbac/"
         }
       ]
     }
