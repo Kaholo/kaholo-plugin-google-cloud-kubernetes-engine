@@ -1,11 +1,25 @@
-# kaholo-plugin-google-cloud-kubernetes-engine
-Kaholo plugin for integration with Google Cloud Kubernetes Engine(GKE).
+# Kaholo Google Kubernetes Engine Plugin
+This plugin extends Kaholo to be able <b>to create and configure</b> Kubernetes clusters in Google Kubernetes Engine (GKE). GKE provides a managed environment for deploying, managing, and scaling your containerized applications using Google infrastructure.
 
-##  Settings
-1. Service Account Credentials (Vault) **Required if not in action** - Default service account credentials
-[Learn More](https://cloud.google.com/docs/authentication/production)
-2. Default Project ID (String) **Required if not in action** - The ID of the default project to send requests to.
-[Learn More](https://cloud.google.com/resource-manager/docs/creating-managing-projects)
+<b>If you already have a GKE cluster</b> to use, please use the [Kaholo Kubernetes Plugin](https://github.com/Kaholo/kaholo-plugin-kubernetes/releases) to deploy applications and services within the cluster. The Kaholo Kubernetes Plugin is a general Kubernetes plugin that works with Kuberenetes clusters of all types - Google, AWS, Azure, microk8s, minikube, etc.
+
+## Zonal vs Regional Clusters
+GKE provides two types of clusters, zonal and regional. The main difference is zonal clusters exist within only one zone, while regional ones may have nodes spread across multiple zones, for fault tolerance and high availability purposes. When using the Kaholo Google Kubernetes Engine Plugin, both zone and region are often available as paramters, but if using a regional cluster, the zone parameter may be simply ignored, i.e. left empty.
+
+## Prerequisites
+To use this plugin you must first have a GCP Account credentials with sufficient privileges to create and manage the GKE service.
+
+## Access and Authentication
+GKE uses a set of service account keys (Credentials) and a project for access and authentication. GCP organizes resources into named projects. The Project determines which assets you can see as well as various other project-level settings and permissions.
+
+* Credentials - JSON format service account keys as downloaded from GCP, stored in Kaholo Vault.
+* Project - text NAME of GCP project in which to work
+
+When creating keys for a GCP service account, they can be downloaded in either JSON or P12 format. The JSON format is required for Kaholo plugins. Store the entire JSON document in a Kaholo Vault item. The Kaholo Vault allows them to be safely used without exposing the keys in log files, error messages, execution results, or any other output.
+
+When pasting your GCP service account credentials into the Kaholo Vault, be careful to avoid line break issues. These happen when you cut from some text editors that use word wrap and then paste into Kaholo - newline characters get introduced. To avoid this either disable word-wrap or use another product that takes word-wrap into account when cutting/copying. If you have this issue the error when running a gcloud command looks something like this:
+
+    Error : Error: ERROR: (gcloud.auth.activate-service-account) Could not read json file /tmp/tmp.GLezAM1EsF.json: Invalid \escape: line 1 column 764 (char 763)
 
 ## Method: Create Basic Cluster
 Create a new cluster with one node pool, only with most used options available.
