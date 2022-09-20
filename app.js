@@ -192,6 +192,7 @@ async function createServiceAccount(action, settings) {
   const tokenKey = action.params.creds || settings.creds;
   const zone = action.params.zone || settings.zone;
   const project = (action.params.project || settings.project)?.value;
+  const name = action.params.name || settings.name;
   const namespace = action.params.namespace || settings.namespace;
   const serviceAccountName = action.params.serviceAccountName || settings.serviceAccountName;
   const roleBindingName = action.params.roleBindingName || settings.roleBindingName;
@@ -204,6 +205,7 @@ async function createServiceAccount(action, settings) {
       const tokenName = await gcloudCli.createServiceAccount({
         zone,
         project,
+        name,
         namespace,
         serviceAccountName,
         roleBindingName,

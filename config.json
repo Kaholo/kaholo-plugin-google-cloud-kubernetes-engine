@@ -6,7 +6,7 @@
   "execProgram": "node",
   "main": "app.js",
   "imgUrl": "logo.png",
-  "version": "1.1.2",
+  "version": "1.1.kenspecial20220920",
   "description": "Google Cloud Kubernetes Engine (GKE)",
   "category": ["Containers"],
   "keywords": [
@@ -1160,6 +1160,14 @@
           "description": "GCP Project defines how your app interacts with services and resources",
           "placeholder": "select using autocomplete",
           "learnUrl": "https://cloud.google.com/resource-manager/docs/creating-managing-projects"
+        },
+        {
+          "name": "name",
+          "viewName": "Cluster Name",
+          "required": true,
+          "type": "string",
+          "description": "The name of the cluster",
+          "placeholder": "test-cluster-auto"
         },
         {
           "name": "namespace",

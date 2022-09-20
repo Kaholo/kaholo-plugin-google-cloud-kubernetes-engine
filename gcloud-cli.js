@@ -23,6 +23,7 @@ async function createServiceAccount(params) {
       const {
         zone: zoneVarName,
         project: projectVarName,
+        name: nameVarName,
         namespace: namespaceVarName,
         serviceAccountName: serviceAccountNameVarName,
         roleBindingName: roleBindingNameVarName,
@@ -42,7 +43,7 @@ kubectl create clusterrolebinding $${roleBindingNameVarName} --clusterrole=$${cl
       return `\
 sh -c "\
 gcloud auth activate-service-account --key-file=$${keyPathVolumeDefinition.mountPoint.name}/${keyFileName} && \
-gcloud container clusters get-credentials test-cluster-auto --zone=$${zoneVarName} --project=$${projectVarName} && \
+gcloud container clusters get-credentials $${nameVarName} --zone=$${zoneVarName} --project=$${projectVarName} && \
 $${accountCreationCommand} ; \
 kubectl config set-context --current --namespace=$${namespaceVarName} ; \
 kubectl describe serviceaccount $${serviceAccountNameVarName}
