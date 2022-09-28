@@ -6,7 +6,7 @@
   "execProgram": "node",
   "main": "app.js",
   "imgUrl": "logo.png",
-  "version": "1.1.2",
+  "version": "1.1.2test",
   "description": "Google Cloud Kubernetes Engine (GKE)",
   "category": ["Containers"],
   "keywords": [
@@ -47,15 +47,7 @@
       "description": "Geographical GCP region where infrastructure is or will be located",
       "placeholder": "select using autocomplete",
       "learnUrl": "https://cloud.google.com/compute/docs/regions-zones"
-    },
-    {
-      "name": "waitForOperation",
-      "viewName": "Default Wait For Operation End",
-      "type": "boolean",
-      "description": "Wait until the operation is completed before moving onto the next Action in the pipeline.",
-      "learnUrl": "https://github.com/Kaholo/kaholo-plugin-google-cloud-kubernetes-engine"
     }
-
   ],
   "methods": [
     {
@@ -1143,14 +1135,6 @@
           "learnUrl": "https://cloud.google.com/docs/authentication/production"
         },
         {
-          "name": "zone",
-          "viewName": "Zone/Region",
-          "type": "string",
-          "required": true,
-          "description": "Zone or Region name where the operation is performed",
-          "learnUrl": "https://cloud.google.com/compute/docs/regions-zones"
-        },
-        {
           "name": "project",
           "viewName": "Project",
           "type": "autocomplete",
@@ -1162,16 +1146,26 @@
           "learnUrl": "https://cloud.google.com/resource-manager/docs/creating-managing-projects"
         },
         {
+          "name": "zone",
+          "viewName": "Zone/Region",
+          "type": "string",
+          "required": true,
+          "description": "Zone or Region name where the operation is performed",
+          "learnUrl": "https://cloud.google.com/compute/docs/regions-zones"
+        },
+        {
           "name": "namespace",
           "viewName": "Namespace",
-          "type": "string"
+          "type": "string",
+          "required": false,
+          "description": "A namespace to which the service account will be confined, if specified."
         },
         {
           "name": "serviceAccountName",
           "viewName": "Service Account name",
           "type": "string",
           "required": true,
-          "description": "Name of the new Service Account",
+          "description": "Name for the new Service Account",
           "learnUrl": "https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/"
         },
         {
@@ -1179,7 +1173,7 @@
           "viewName": "Role Binding name",
           "type": "string",
           "required": true,
-          "description": "Name which labels the Role Binding to use",
+          "description": "Name for the Role Binding that will be created",
           "learnUrl": "https://kubernetes.io/docs/reference/access-authn-authz/rbac/"
         },
         {
@@ -1187,7 +1181,8 @@
           "viewName": "Cluster Role name",
           "type": "string",
           "required": true,
-          "description": "Name which labels the Cluster Role to use",
+          "description": "Name of an existing role or cluster role to bind to the new service account",
+          "placeholder": "cluster-admin",
           "learnUrl": "https://kubernetes.io/docs/reference/access-authn-authz/rbac/"
         }
       ]
