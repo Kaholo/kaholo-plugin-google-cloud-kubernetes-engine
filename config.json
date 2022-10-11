@@ -24,14 +24,20 @@
     "docker",
     "deployment"
   ],
+  "auth": {
+    "authId": "gcpAccount",
+    "params": [
+      {
+        "name": "creds",
+        "viewName": "Service Account Credentials",
+        "type": "vault",
+        "parserType": "object",
+        "description": "GCP service account credentials (JSON) to use by default",
+        "learnUrl": "https://cloud.google.com/docs/authentication/production"
+      }
+    ]
+  },
   "settings": [
-    {
-      "name": "creds",
-      "viewName": "Default Service Account Credentials",
-      "type": "vault",
-      "description": "Vaulted JSON document containing service account credentials as provided by GCP",
-      "learnUrl": "https://cloud.google.com/docs/authentication/production"
-    },
     {
       "name": "project",
       "viewName": "Default Project ID",
@@ -54,13 +60,6 @@
       "name": "createBasicCluster",
       "viewName": "Create Basic Cluster",
       "params": [
-        {
-          "name": "creds",
-          "viewName": "Service Account Credentials",
-          "type": "vault",
-          "description": "Vaulted JSON document containing service account credentials as provided by GCP",
-          "learnUrl": "https://cloud.google.com/docs/authentication/production"
-        },
         {
           "name": "project",
           "viewName": "Project",
@@ -313,13 +312,6 @@
       "viewName": "Create Cluster From JSON",
       "params": [
         {
-          "name": "creds",
-          "viewName": "Service Account Credentials *",
-          "type": "vault",
-          "description": "Vaulted JSON document containing service account credentials as provided by GCP",
-          "learnUrl": "https://cloud.google.com/docs/authentication/production"
-        },
-        {
           "name": "project",
           "viewName": "Project",
           "type": "autocomplete",
@@ -391,13 +383,6 @@
       "name": "createNodePool",
       "viewName": "Create Node Pool",
       "params": [
-        {
-          "name": "creds",
-          "viewName": "Service Account Credentials",
-          "type": "vault",
-          "description": "Vaulted JSON document containing service account credentials as provided by GCP",
-          "learnUrl": "https://cloud.google.com/docs/authentication/production"
-        },
         {
           "name": "project",
           "viewName": "Project",
@@ -712,13 +697,6 @@
       "viewName": "Create Node Pool From JSON",
       "params": [
         {
-          "name": "creds",
-          "viewName": "Service Account Credentials",
-          "type": "vault",
-          "description": "Vaulted JSON document containing service account credentials as provided by GCP",
-          "learnUrl": "https://cloud.google.com/docs/authentication/production"
-        },
-        {
           "name": "project",
           "viewName": "Project",
           "type": "autocomplete",
@@ -783,13 +761,6 @@
       "viewName": "Delete Cluster",
       "params": [
         {
-          "name": "creds",
-          "viewName": "Service Account Credentials",
-          "type": "vault",
-          "description": "Vaulted JSON document containing service account credentials as provided by GCP",
-          "learnUrl": "https://cloud.google.com/docs/authentication/production"
-        },
-        {
           "name": "project",
           "viewName": "Project",
           "type": "autocomplete",
@@ -844,13 +815,6 @@
       "name": "deleteNodePool",
       "viewName": "Delete Node Pool",
       "params": [
-        {
-          "name": "creds",
-          "viewName": "Service Account Credentials",
-          "type": "vault",
-          "description": "Vaulted JSON document containing service account credentials as provided by GCP",
-          "learnUrl": "https://cloud.google.com/docs/authentication/production"
-        },
         {
           "name": "project",
           "viewName": "Project",
@@ -918,13 +882,6 @@
       "viewName": "Describe Cluster",
       "params": [
         {
-          "name": "creds",
-          "viewName": "Service Account Credentials",
-          "type": "vault",
-          "description": "Vaulted JSON document containing service account credentials as provided by GCP",
-          "learnUrl": "https://cloud.google.com/docs/authentication/production"
-        },
-        {
           "name": "project",
           "viewName": "Project",
           "type": "autocomplete",
@@ -972,13 +929,6 @@
       "name": "describeClusterCredentials",
       "viewName": "Describe Cluster Credentials",
       "params": [
-        {
-          "name": "creds",
-          "viewName": "Service Account Credentials",
-          "type": "vault",
-          "description": "Vaulted JSON document containing service account credentials as provided by GCP",
-          "learnUrl": "https://cloud.google.com/docs/authentication/production"
-        },
         {
           "name": "project",
           "viewName": "Project",
@@ -1028,13 +978,6 @@
       "viewName": "List Clusters",
       "params": [
         {
-          "name": "creds",
-          "viewName": "Service Account Credentials",
-          "type": "vault",
-          "description": "Vaulted JSON document containing service account credentials as provided by GCP",
-          "learnUrl": "https://cloud.google.com/docs/authentication/production"
-        },
-        {
           "name": "project",
           "viewName": "Project",
           "type": "autocomplete",
@@ -1071,13 +1014,6 @@
       "name": "listNodePools",
       "viewName": "List Node Pools",
       "params": [
-        {
-          "name": "creds",
-          "viewName": "Service Account Credentials",
-          "type": "vault",
-          "description": "Vaulted JSON document containing service account credentials as provided by GCP",
-          "learnUrl": "https://cloud.google.com/docs/authentication/production"
-        },
         {
           "name": "project",
           "viewName": "Project",
@@ -1126,14 +1062,6 @@
       "name": "createServiceAccount",
       "viewName": "Create Service Account",
       "params": [
-        {
-          "name": "creds",
-          "viewName": "Default Service Account Credentials",
-          "type": "vault",
-          "required": true,
-          "description": "Vaulted JSON document containing service account credentials as provided by GCP",
-          "learnUrl": "https://cloud.google.com/docs/authentication/production"
-        },
         {
           "name": "project",
           "viewName": "Project",
