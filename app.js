@@ -16,7 +16,7 @@ async function createBasicCluster(action, settings) {
     enableAutoscaling, minNode, maxNode, machineType, nodeImage, diskType,
     diskSize, diskEncryptionKey, waitForOperation, network, subnetwork,
   } = action.params;
-  const region = action.params.region || settings.region;
+  const region = action.params.region;
   const client = GKEService.from(action.params, settings);
   return client.createBasicCluster({
     name: parsers.string(name),
@@ -44,7 +44,7 @@ async function createClusterJson(action, settings) {
   const {
     locationType, zone, clusterJson, waitForOperation,
   } = action.params;
-  const region = action.params.region || settings.region;
+  const region = action.params.region;
   const client = GKEService.from(action.params, settings);
   return client.createClusterJson({
     locationType,
@@ -63,7 +63,7 @@ async function createNodePool(action, settings) {
     maxPodsPerNode, networkTags, serviceAccount, saAccessScopes, enableIntegrityMonitoring,
     enableSecureBoot, labels, gceInstanceMetadata, version, waitForOperation,
   } = action.params;
-  const region = action.params.region || settings.region;
+  const region = action.params.region;
   const client = GKEService.from(action.params, settings);
   return client.createNodePool({
     region: parsers.autocomplete(region),
@@ -101,7 +101,7 @@ async function createNodePoolJson(action, settings) {
   const {
     zone, cluster, nodePoolJson, waitForOperation,
   } = action.params;
-  const region = action.params.region || settings.region;
+  const region = action.params.region;
   const client = GKEService.from(action.params, settings);
   return client.createNodePoolJson({
     region: parsers.autocomplete(region),
@@ -116,7 +116,7 @@ async function deleteCluster(action, settings) {
   const {
     zone, cluster, waitForOperation,
   } = action.params;
-  const region = action.params.region || settings.region;
+  const region = action.params.region;
   const client = GKEService.from(action.params, settings);
   return client.deleteCluster({
     region: parsers.autocomplete(region),
@@ -130,7 +130,7 @@ async function deleteNodePool(action, settings) {
   const {
     zone, cluster, nodePool, waitForOperation,
   } = action.params;
-  const region = action.params.region || settings.region;
+  const region = action.params.region;
   const client = GKEService.from(action.params, settings);
   return client.deleteNodePool({
     region: parsers.autocomplete(region),
@@ -143,7 +143,7 @@ async function deleteNodePool(action, settings) {
 
 async function describeCluster(action, settings) {
   const { zone, cluster } = action.params;
-  const region = action.params.region || settings.region;
+  const region = action.params.region;
   const client = GKEService.from(action.params, settings);
   return client.describeCluster({
     region: parsers.autocomplete(region),
@@ -154,7 +154,7 @@ async function describeCluster(action, settings) {
 
 async function describeClusterCredentials(action, settings) {
   const { zone, cluster } = action.params;
-  const region = action.params.region || settings.region;
+  const region = action.params.region;
   const client = GKEService.from(action.params, settings);
   const describedCluster = await client.describeCluster({
     region: parsers.autocomplete(region),
@@ -169,7 +169,7 @@ async function describeClusterCredentials(action, settings) {
 
 async function listClusters(action, settings) {
   const { zone } = action.params;
-  const region = action.params.region || settings.region;
+  const region = action.params.region;
   const client = GKEService.from(action.params, settings);
   return client.listClusters({
     region: parsers.autocomplete(region),
@@ -179,7 +179,7 @@ async function listClusters(action, settings) {
 
 async function listNodePools(action, settings) {
   const { zone, cluster } = action.params;
-  const region = action.params.region || settings.region;
+  const region = action.params.region;
   const client = GKEService.from(action.params, settings);
   return client.listNodePools({
     region: parsers.autocomplete(region),
@@ -190,12 +190,13 @@ async function listNodePools(action, settings) {
 
 async function createServiceAccount(action, settings) {
   const tokenKey = action.params.creds || settings.creds;
-  const zone = action.params.zone || settings.zone;
-  const project = (action.params.project || settings.project)?.value;
-  const namespace = action.params.namespace || settings.namespace;
-  const serviceAccountName = action.params.serviceAccountName || settings.serviceAccountName;
-  const roleBindingName = action.params.roleBindingName || settings.roleBindingName;
-  const clusterRoleName = action.params.clusterRoleName || settings.clusterRoleName;
+  const zone = action.params.zone;
+  const project = (action.params.project)?.value;
+  const name = action.params.name;
+  const namespace = action.params.namespace || 'default';
+  const serviceAccountName = action.params.serviceAccountName;
+  const roleBindingName = action.params.roleBindingName;
+  const clusterRoleName = action.params.clusterRoleName;
 
   let result = null;
   await temporaryFileSentinel(
@@ -204,6 +205,7 @@ async function createServiceAccount(action, settings) {
       const tokenName = await gcloudCli.createServiceAccount({
         zone,
         project,
+        name,
         namespace,
         serviceAccountName,
         roleBindingName,
@@ -214,6 +216,7 @@ async function createServiceAccount(action, settings) {
       const token = await gcloudCli.lookupToken({
         zone,
         project,
+        name,
         namespace,
         keyFilePath,
         tokenName,
@@ -222,6 +225,7 @@ async function createServiceAccount(action, settings) {
       const certificateAndEndpoint = await gcloudCli.lookupCertAndEndpoint({
         zone,
         project,
+        name,
         namespace,
         keyFilePath,
       });
