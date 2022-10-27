@@ -6,7 +6,7 @@
   "execProgram": "node",
   "main": "app.js",
   "imgUrl": "logo.png",
-  "version": "1.1.2test",
+  "version": "1.2.0",
   "description": "Google Cloud Kubernetes Engine (GKE)",
   "category": ["Containers"],
   "keywords": [
@@ -1080,6 +1080,14 @@
           "required": true,
           "description": "Zone or Region name where the operation is performed",
           "learnUrl": "https://cloud.google.com/compute/docs/regions-zones"
+        },
+        {
+          "name": "name",
+          "viewName": "Cluster Name",
+          "required": true,
+          "type": "string",
+          "description": "The name of the cluster",
+          "placeholder": "test-cluster-auto"
         },
         {
           "name": "namespace",

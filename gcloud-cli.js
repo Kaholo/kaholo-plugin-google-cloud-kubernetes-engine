@@ -9,7 +9,7 @@ const exec = util.promisify(require("child_process").exec);
 
 const { splitDirectory } = require("./helpers");
 
-const GCLOUD_DOCKER_IMAGE = "alpine/gcloud";
+const GCLOUD_DOCKER_IMAGE = "google/cloud-sdk:alpine";
 
 async function createServiceAccount(params) {
   return callCommand(
@@ -23,13 +23,14 @@ async function createServiceAccount(params) {
       const {
         zone: zoneVarName,
         project: projectVarName,
+        name: nameVarName,
         namespace: namespaceVarName,
         serviceAccountName: serviceAccountNameVarName,
         roleBindingName: roleBindingNameVarName,
         clusterRoleName: clusterRoleNameVarName,
       } = environmentalVariablesNames;
 
-      const accountCreationCommand = namespaceVarName
+      const accountCreationCommand = (params.namespace !== "default")
         ? `\
 kubectl create namespace $${namespaceVarName} ; \
 kubectl create serviceaccount $${serviceAccountNameVarName} --namespace $${namespaceVarName} ; \
@@ -41,9 +42,11 @@ kubectl create clusterrolebinding $${roleBindingNameVarName} --clusterrole=$${cl
 
       return `\
 sh -c "\
+gcloud components install kubectl --quiet && \
+gcloud components install gke-gcloud-auth-plugin --quiet && \
 gcloud auth activate-service-account --key-file=$${keyPathVolumeDefinition.mountPoint.name}/${keyFileName} && \
-gcloud container clusters get-credentials test-cluster-auto --zone=$${zoneVarName} --project=$${projectVarName} && \
-$${accountCreationCommand} ; \
+gcloud container clusters get-credentials $${nameVarName} --zone=$${zoneVarName} --project=$${projectVarName} && \
+${accountCreationCommand} ; \
 kubectl config set-context --current --namespace=$${namespaceVarName} ; \
 kubectl describe serviceaccount $${serviceAccountNameVarName}
 "`; // kubectl commands may fail if the object exists, that's why we execute no matter what
@@ -63,16 +66,18 @@ async function lookupToken(params) {
       const {
         zone: zoneVarName,
         project: projectVarName,
+        name: nameVarName,
         namespace: namespaceVarName,
         tokenName: tokenNameVarName,
       } = environmentalVariablesNames;
 
       return `\
 sh -c "\
+gcloud components install kubectl --quiet && \
+gcloud components install gke-gcloud-auth-plugin --quiet && \
 gcloud auth activate-service-account --key-file=$${keyPathVolumeDefinition.mountPoint.name}/${keyFileName} && \
-gcloud container clusters get-credentials test-cluster-auto --zone=$${zoneVarName} --project=$${projectVarName} && \
-kubectl config set-context --current --namespace=$${namespaceVarName} ; \
-kubectl describe secret $${tokenNameVarName}
+gcloud container clusters get-credentials $${nameVarName} --zone=$${zoneVarName} --project=$${projectVarName} && \
+kubectl describe secret $${tokenNameVarName} --namespace=$${namespaceVarName}
 "`; // kubectl commands may fail if the object exists, that's why we execute no matter what
     },
   );
@@ -93,13 +98,16 @@ async function lookupCertAndEndpoint(params) {
       const {
         zone: zoneVarName,
         project: projectVarName,
+        name: nameVarName,
         namespace: namespaceVarName,
       } = environmentalVariablesNames;
 
       return `\
 sh -c "\
+gcloud components install kubectl --quiet && \
+gcloud components install gke-gcloud-auth-plugin --quiet && \
 gcloud auth activate-service-account --key-file=$${keyPathVolumeDefinition.mountPoint.name}/${keyFileName} && \
-gcloud container clusters get-credentials test-cluster-auto --zone=$${zoneVarName} --project=$${projectVarName} && \
+gcloud container clusters get-credentials $${nameVarName} --zone=$${zoneVarName} --project=$${projectVarName} && \
 kubectl config set-context --current --namespace=$${namespaceVarName} ; \
 cat ~/.kube/config
 "`; // kubectl commands may fail if the object exists, that's why we execute no matter what
