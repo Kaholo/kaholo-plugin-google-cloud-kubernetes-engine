@@ -30,7 +30,6 @@ async function createServiceAccount(params) {
         clusterRoleName: clusterRoleNameVarName,
       } = environmentalVariablesNames;
 
-      // const accountCreationCommand = namespaceVarName
       const accountCreationCommand = (params.namespace !== "default")
         ? `\
 kubectl create namespace $${namespaceVarName} ; \
