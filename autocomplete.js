@@ -29,7 +29,9 @@ function getAutoResult(id, value) {
 }
 
 function getParseFromParam(idParamName, valParamName) {
-  if (valParamName) { return (item) => getAutoResult(item[idParamName], item[valParamName]); }
+  if (valParamName) {
+    return (item) => getAutoResult(item[idParamName], item[valParamName]);
+  }
   return (item) => getAutoResult(item[idParamName]);
 }
 
@@ -50,7 +52,9 @@ function filterItems(items, query) {
 function listAuto(listFunc, fields, paging, noProject, parseFunc) {
   let resolvedFields = fields;
   let resolvedParseFunc = parseFunc;
-  if (!resolvedFields) { resolvedFields = ["id", "name"]; }
+  if (!resolvedFields) {
+    resolvedFields = ["id", "name"];
+  }
   if (!resolvedParseFunc && resolvedFields) {
     resolvedParseFunc = getParseFromParam(...resolvedFields);
   }
@@ -76,7 +80,9 @@ function listAuto(listFunc, fields, paging, noProject, parseFunc) {
           item.value.toLowerCase() === resolvedQuery.toLowerCase()
           || item.id.toLowerCase() === resolvedQuery.toLowerCase()
         ));
-        if (exactMatch) { return [exactMatch]; }
+        if (exactMatch) {
+          return [exactMatch];
+        }
         nextPageToken = result.nextPageToken;
       }
     } catch (err) {
@@ -97,19 +103,25 @@ async function listMachineTypesWithCustomAuto(query, pluginSettings, triggerPara
       { id: "n2-custom", value: "Custom N2" },
       { id: "n2d-custom", value: "Custom N2D" },
       { id: "e2-custom", value: "Custom E2" }], resolvedQuery);
-    if (resolvedQuery.toLowerCase().includes("custom")) { return items; }
+    if (resolvedQuery.toLowerCase().includes("custom")) {
+      return items;
+    }
     // TODO: Remove awaits in loop
     // eslint-disable-next-line
     while (true) {
       // eslint-disable-next-line
       const result = await client.listMachineTypes(params, ["name"], nextPageToken);
       items.push(...handleResult(result.items, resolvedQuery, getParseFromParam("name")));
-      if (!result.nextPageToken || !resolvedQuery || items.length >= MAX_RESULTS) { return items; }
+      if (!result.nextPageToken || !resolvedQuery || items.length >= MAX_RESULTS) {
+        return items;
+      }
       const exactMatch = items.find((item) => (
         item.value.toLowerCase() === resolvedQuery.toLowerCase()
         || item.id.toLowerCase() === resolvedQuery.toLowerCase()
       ));
-      if (exactMatch) { return [exactMatch]; }
+      if (exactMatch) {
+        return [exactMatch];
+      }
       nextPageToken = result.nextPageToken;
     }
   } catch (err) {

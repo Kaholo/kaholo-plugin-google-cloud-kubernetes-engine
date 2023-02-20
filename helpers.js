@@ -6,12 +6,20 @@ function removeUndefinedAndEmpty(obj) {
   }
   const resolvedObj = obj;
   Object.entries(resolvedObj).forEach(([key, value]) => {
-    if (key === "auth") { return; }
-    if (value === undefined) { delete resolvedObj[key]; }
-    if (Array.isArray(value) && value.length === 0) { delete resolvedObj[key]; }
+    if (key === "auth") {
+      return;
+    }
+    if (value === undefined) {
+      delete resolvedObj[key];
+    }
+    if (Array.isArray(value) && value.length === 0) {
+      delete resolvedObj[key];
+    }
     if (value && typeof (value) === "object") {
       removeUndefinedAndEmpty(value);
-      if (Object.keys(value).length === 0) { delete resolvedObj[key]; }
+      if (Object.keys(value).length === 0) {
+        delete resolvedObj[key];
+      }
     }
   });
   return resolvedObj;
@@ -56,23 +64,31 @@ async function handleOperation(operation) {
 function defaultGcpCallback(resolve, reject, waitForOperation) {
   if (!waitForOperation) {
     return (err, entity, operation, apiResponse) => {
-      if (err) { return reject(err); }
+      if (err) {
+        return reject(err);
+      }
       return resolve(apiResponse);
     };
   }
   return (err, entity, operation) => {
-    if (err) { return reject(err); }
+    if (err) {
+      return reject(err);
+    }
     return handleOperation(operation).then(resolve).catch(reject);
   };
 }
 
 function parseFields(fields, prefix = "items") {
-  if (!fields) { return undefined; }
+  if (!fields) {
+    return undefined;
+  }
   return fields.sort().map((field) => `${prefix}/${field}`).join(", ");
 }
 
 function sleep(ms) {
-  return new Promise((resolve) => { setTimeout(resolve, ms); });
+  return new Promise((resolve) => {
+    setTimeout(resolve, ms);
+  });
 }
 
 function validateZoneParameter({ locationType, zone }) {
