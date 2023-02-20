@@ -192,7 +192,7 @@ async function listNodePools(action, settings) {
 async function createServiceAccount(action) {
   const {
     zone,
-    creds: tokenKey,
+    credentials: tokenKey,
     name,
     serviceAccountName,
     roleBindingName,

@@ -35,7 +35,7 @@ module.exports = class GoogleComputeService extends Compute {
      * @return {GoogleComputeService} The Google Compute Service Client
      */
   static from(params, settings, noProject) {
-    const creds = parsers.object(params.creds || settings.creds);
+    const creds = parsers.object(params.credentials || settings.credentials);
     if (!creds) {
       throw new Error("Must provide credentials to call any method in the plugin!");
     }
@@ -419,14 +419,14 @@ module.exports = class GoogleComputeService extends Compute {
       pageToken,
     });
     if (query) {
-      request.filter = `name:${query}`;
+      request.filter = `name = ${query}`;
     }
 
     const { data } = await compute.networks.list(request);
     return Object.keys(data).length === 0 ? { items: [] } : data;
   }
 
-  async listSubnetworks({ network, region }, fields, pageToken) {
+  async listSubnetworks({ region }, fields, pageToken) {
     const request = removeUndefinedAndEmpty({
       auth: this.getAuthClient(),
       project: this.projectId,
@@ -435,9 +435,6 @@ module.exports = class GoogleComputeService extends Compute {
       region,
       pageToken,
     });
-    if (network) {
-      request.filter = `network=${network}`;
-    }
 
     const { data } = await compute.subnetworks.list(request);
     return Object.keys(data).length === 0 ? { items: [] } : data;

@@ -28,7 +28,7 @@
     "authId": "gcpAccount",
     "params": [
       {
-        "name": "creds",
+        "name": "credentials",
         "viewName": "Service Account Credentials",
         "type": "vault",
         "parserType": "object",

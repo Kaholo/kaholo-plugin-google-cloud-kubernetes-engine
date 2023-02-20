@@ -29,7 +29,7 @@ module.exports = class GKEService {
 
   static from(params, settings) {
     return new GKEService({
-      credentials: parsers.jsonString(params.creds || settings.creds),
+      credentials: parsers.jsonString(params.credentials || settings.credentials),
       projectId: parsers.autocomplete(params.project || settings.project),
     });
   }
