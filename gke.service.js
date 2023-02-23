@@ -12,9 +12,13 @@ module.exports = class GKEService {
     if (!credentials) {
       throw new Error("Credentials are required. Provide them either in the action's parameters or plugin's settings.");
     }
-    if (typeof credentials !== "object") { throw new Error("Credentials provided in a bad format"); }
+    if (typeof credentials !== "object") {
+      throw new Error("Credentials provided in a bad format");
+    }
     this.options = { credentials };
-    if (projectId) { this.options.projectId = projectId; }
+    if (projectId) {
+      this.options.projectId = projectId;
+    }
     try {
       this.gcce = new GCCEService(credentials, projectId);
       this.gke = new container.v1.ClusterManagerClient(this.options);
@@ -25,7 +29,7 @@ module.exports = class GKEService {
 
   static from(params, settings) {
     return new GKEService({
-      credentials: parsers.jsonString(params.creds || settings.creds),
+      credentials: parsers.jsonString(params.credentials || settings.credentials),
       projectId: parsers.autocomplete(params.project || settings.project),
     });
   }
@@ -259,7 +263,9 @@ module.exports = class GKEService {
 
   async listMachineTypes({ zone }, fields, pageToken) {
     let resolvedZone = zone;
-    if (!resolvedZone) { resolvedZone = "us-central1-c"; }
+    if (!resolvedZone) {
+      resolvedZone = "us-central1-c";
+    }
     return this.gcce.listMachineTypes({ zone: resolvedZone }, fields, pageToken);
   }
 
@@ -301,7 +307,9 @@ module.exports = class GKEService {
       // eslint-disable-next-line
       await sleep(2000); // sleep for 2 seconds
     }
-    if (resolvedOperation.status === "DONE" && !resolvedOperation.error) { return resolvedOperation; }
+    if (resolvedOperation.status === "DONE" && !resolvedOperation.error) {
+      return resolvedOperation;
+    }
     throw resolvedOperation;
   }
 };
