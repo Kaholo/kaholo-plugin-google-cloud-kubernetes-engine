@@ -6,8 +6,8 @@
   "execProgram": "node",
   "main": "app.js",
   "imgUrl": "logo.png",
-  "version": "1.2.0",
-  "description": "Google Cloud Kubernetes Engine (GKE)",
+  "version": "2.0.0",
+  "description": "Google Cloud Platform managed Kubernetes cluster environments (GKE)",
   "category": ["Containers"],
   "keywords": [
     "gcp",
@@ -51,7 +51,7 @@
       "viewName": "Default Region",
       "type": "string",
       "description": "Geographical GCP region where infrastructure is or will be located",
-      "placeholder": "select using autocomplete",
+      "placeholder": "europe-north1",
       "learnUrl": "https://cloud.google.com/compute/docs/regions-zones"
     }
   ],
@@ -144,6 +144,7 @@
           "description": "Kubernetes releases updates often, to deliver security updates, fix known issues, and introduce new features. Release channels determine the frequency and extent of updates to your cluster.",
           "placeholder": "select using drop-down",
           "learnUrl": "https://cloud.google.com/kubernetes-engine/docs/concepts/release-channels",
+          "default": "REGULAR",
           "options": [
             {
               "id": "none",
@@ -169,7 +170,7 @@
           "required": true,
           "type": "string",
           "description": "Initial cluster version.",
-          "placeholder": "1.21.6",
+          "placeholder": "1.24.9",
           "learnUrl": "https://cloud.google.com/kubernetes-engine/docs/release-notes"
         },
         {
@@ -178,13 +179,14 @@
           "required": true,
           "type": "string",
           "description": "The number of running nodes for the default node pool",
-          "placeholder": "3",
+          "default": "1",
           "learnUrl": "https://cloud.google.com/kubernetes-engine/docs/concepts/node-pools"
         },
         {
           "name": "enableAutoscaling",
           "viewName": "Enable Autoscaling",
           "type": "boolean",
+          "default": false,
           "description": "Autoscaling increases or decreases the number of nodes, based on the demands of your workloads.",
           "learnUrl": "https://cloud.google.com/kubernetes-engine/docs/concepts/cluster-autoscaler"
         },
@@ -223,6 +225,7 @@
           "description": "The operating system image that runs on each node",
           "placeholder": "select using drop-down",
           "learnUrl": "https://cloud.google.com/kubernetes-engine/docs/concepts/node-images",
+          "default": "COS_CONTAINERD",
           "options": [
             {
               "id": "COS_CONTAINERD",
@@ -263,6 +266,7 @@
           "viewName": "Boot Disk Type",
           "required": true,
           "type": "options",
+          "default": "pd-standard",
           "options": [
             {
               "id": "pd-standard",
@@ -287,7 +291,8 @@
           "required": true,
           "type": "string",
           "description": "The size in GB for the boot disk of each node in the pool",
-          "placeholder": "10",
+          "default": "50",
+          "placeholder": "50",
           "learnUrl": "https://cloud.google.com/compute/docs/disks"
         },
         {
@@ -302,6 +307,7 @@
           "name": "waitForOperation",
           "viewName": "Wait For Operation End",
           "type": "boolean",
+          "default": true,
           "description": "Wait until the operation is completed before moving onto the next Action in the pipeline.",
           "learnUrl": "https://github.com/Kaholo/kaholo-plugin-google-cloud-kubernetes-engine"
         }
