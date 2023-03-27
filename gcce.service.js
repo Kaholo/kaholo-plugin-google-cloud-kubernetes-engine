@@ -19,7 +19,9 @@ module.exports = class GoogleComputeService extends Compute {
      */
   constructor(credentials, projectId) {
     const computeOptions = { credentials };
-    if (projectId) { computeOptions.projectId = projectId; }
+    if (projectId) {
+      computeOptions.projectId = projectId;
+    }
     super(computeOptions);
 
     this.projectId = projectId;
@@ -33,8 +35,10 @@ module.exports = class GoogleComputeService extends Compute {
      * @return {GoogleComputeService} The Google Compute Service Client
      */
   static from(params, settings, noProject) {
-    const creds = parsers.object(params.creds || settings.creds);
-    if (!creds) { throw new Error("Must provide credentials to call any method in the plugin!"); }
+    const creds = parsers.object(params.credentials || settings.credentials);
+    if (!creds) {
+      throw new Error("Must provide credentials to call any method in the plugin!");
+    }
     const args = [creds];
     if (!noProject) {
       args.push(parsers.autocomplete(params.project || settings.project));
@@ -94,8 +98,12 @@ module.exports = class GoogleComputeService extends Compute {
   }, waitForOperation) {
     let resolvedZone = zone;
     const resolvedTags = tags || [];
-    if (allowHttp) { resolvedTags.push("http-server"); }
-    if (allowHttps) { resolvedTags.push("https-server"); }
+    if (allowHttp) {
+      resolvedTags.push("http-server");
+    }
+    if (allowHttps) {
+      resolvedTags.push("https-server");
+    }
     const scopes = (
       saAccessScopes === "full"
         ? ["https://www.googleapis.com/auth/cloud-platform"]
@@ -209,7 +217,9 @@ module.exports = class GoogleComputeService extends Compute {
       default:
         throw new Error("Must provide an action to run on the VM instance!");
     }
-    if (waitForOperation) { await handleOperation(res[0]); }
+    if (waitForOperation) {
+      await handleOperation(res[0]);
+    }
     return res[1] || res;
   }
 
@@ -226,14 +236,20 @@ module.exports = class GoogleComputeService extends Compute {
       auth,
     });
     let result = (await compute.networks.insert(request)).data;
-    if (!waitForOperation) { return result; }
-    if (result.error) { throw result; }
+    if (!waitForOperation) {
+      return result;
+    }
+    if (result.error) {
+      throw result;
+    }
     result = (await compute.globalOperations.wait({
       project: this.projectId,
       operation: result.name,
       auth,
     })).data;
-    if (result.error) { throw result; }
+    if (result.error) {
+      throw result;
+    }
     return result;
   }
 
@@ -280,8 +296,12 @@ module.exports = class GoogleComputeService extends Compute {
       priority: priority || 1000,
       direction: direction || "INGRESS",
     });
-    if (fwRule) { config[!action || action === "allow" ? "allowed" : "denied"] = fwRule; }
-    if (ipRange) { config[config.direction === "INGRESS" ? "sourceRanges" : "destinationRanges"] = ipRange; }
+    if (fwRule) {
+      config[!action || action === "allow" ? "allowed" : "denied"] = fwRule;
+    }
+    if (ipRange) {
+      config[config.direction === "INGRESS" ? "sourceRanges" : "destinationRanges"] = ipRange;
+    }
     return new Promise((resolve, reject) => {
       firewall.create(config, defaultGcpCallback(resolve, reject, waitForOperation));
     });
@@ -326,7 +346,9 @@ module.exports = class GoogleComputeService extends Compute {
   }
 
   async listZones({ region }, fields) {
-    if (fields && !fields.includes("name")) { fields.push("name"); }
+    if (fields && !fields.includes("name")) {
+      fields.push("name");
+    }
     const request = removeUndefinedAndEmpty({
       auth: this.getAuthClient(),
       maxResults: 500,
@@ -397,14 +419,14 @@ module.exports = class GoogleComputeService extends Compute {
       pageToken,
     });
     if (query) {
-      request.filter = `name:${query}`;
+      request.filter = `name = ${query}`;
     }
 
     const { data } = await compute.networks.list(request);
     return Object.keys(data).length === 0 ? { items: [] } : data;
   }
 
-  async listSubnetworks({ network, region }, fields, pageToken) {
+  async listSubnetworks({ region }, fields, pageToken) {
     const request = removeUndefinedAndEmpty({
       auth: this.getAuthClient(),
       project: this.projectId,
@@ -413,9 +435,6 @@ module.exports = class GoogleComputeService extends Compute {
       region,
       pageToken,
     });
-    if (network) {
-      request.filter = `network=${network}`;
-    }
 
     const { data } = await compute.subnetworks.list(request);
     return Object.keys(data).length === 0 ? { items: [] } : data;

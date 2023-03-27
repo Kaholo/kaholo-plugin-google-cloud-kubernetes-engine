@@ -6,8 +6,8 @@
   "execProgram": "node",
   "main": "app.js",
   "imgUrl": "logo.png",
-  "version": "1.1.2",
-  "description": "Google Cloud Kubernetes Engine (GKE)",
+  "version": "2.0.0",
+  "description": "Google Cloud Platform managed Kubernetes cluster environments (GKE)",
   "category": ["Containers"],
   "keywords": [
     "gcp",
@@ -24,14 +24,20 @@
     "docker",
     "deployment"
   ],
+  "auth": {
+    "authId": "gcpAccount",
+    "params": [
+      {
+        "name": "credentials",
+        "viewName": "Service Account Credentials",
+        "type": "vault",
+        "parserType": "object",
+        "description": "GCP service account credentials (JSON) to use by default",
+        "learnUrl": "https://cloud.google.com/docs/authentication/production"
+      }
+    ]
+  },
   "settings": [
-    {
-      "name": "creds",
-      "viewName": "Default Service Account Credentials",
-      "type": "vault",
-      "description": "Vaulted JSON document containing service account credentials as provided by GCP",
-      "learnUrl": "https://cloud.google.com/docs/authentication/production"
-    },
     {
       "name": "project",
       "viewName": "Default Project ID",
@@ -45,30 +51,15 @@
       "viewName": "Default Region",
       "type": "string",
       "description": "Geographical GCP region where infrastructure is or will be located",
-      "placeholder": "select using autocomplete",
+      "placeholder": "europe-north1",
       "learnUrl": "https://cloud.google.com/compute/docs/regions-zones"
-    },
-    {
-      "name": "waitForOperation",
-      "viewName": "Default Wait For Operation End",
-      "type": "boolean",
-      "description": "Wait until the operation is completed before moving onto the next Action in the pipeline.",
-      "learnUrl": "https://github.com/Kaholo/kaholo-plugin-google-cloud-kubernetes-engine"
     }
-
   ],
   "methods": [
     {
       "name": "createBasicCluster",
       "viewName": "Create Basic Cluster",
       "params": [
-        {
-          "name": "creds",
-          "viewName": "Service Account Credentials",
-          "type": "vault",
-          "description": "Vaulted JSON document containing service account credentials as provided by GCP",
-          "learnUrl": "https://cloud.google.com/docs/authentication/production"
-        },
         {
           "name": "project",
           "viewName": "Project",
@@ -153,6 +144,7 @@
           "description": "Kubernetes releases updates often, to deliver security updates, fix known issues, and introduce new features. Release channels determine the frequency and extent of updates to your cluster.",
           "placeholder": "select using drop-down",
           "learnUrl": "https://cloud.google.com/kubernetes-engine/docs/concepts/release-channels",
+          "default": "REGULAR",
           "options": [
             {
               "id": "none",
@@ -178,7 +170,7 @@
           "required": true,
           "type": "string",
           "description": "Initial cluster version.",
-          "placeholder": "1.21.6",
+          "placeholder": "1.24.9",
           "learnUrl": "https://cloud.google.com/kubernetes-engine/docs/release-notes"
         },
         {
@@ -187,13 +179,14 @@
           "required": true,
           "type": "string",
           "description": "The number of running nodes for the default node pool",
-          "placeholder": "3",
+          "default": "1",
           "learnUrl": "https://cloud.google.com/kubernetes-engine/docs/concepts/node-pools"
         },
         {
           "name": "enableAutoscaling",
           "viewName": "Enable Autoscaling",
           "type": "boolean",
+          "default": false,
           "description": "Autoscaling increases or decreases the number of nodes, based on the demands of your workloads.",
           "learnUrl": "https://cloud.google.com/kubernetes-engine/docs/concepts/cluster-autoscaler"
         },
@@ -232,6 +225,7 @@
           "description": "The operating system image that runs on each node",
           "placeholder": "select using drop-down",
           "learnUrl": "https://cloud.google.com/kubernetes-engine/docs/concepts/node-images",
+          "default": "COS_CONTAINERD",
           "options": [
             {
               "id": "COS_CONTAINERD",
@@ -272,6 +266,7 @@
           "viewName": "Boot Disk Type",
           "required": true,
           "type": "options",
+          "default": "pd-standard",
           "options": [
             {
               "id": "pd-standard",
@@ -296,7 +291,8 @@
           "required": true,
           "type": "string",
           "description": "The size in GB for the boot disk of each node in the pool",
-          "placeholder": "10",
+          "default": "50",
+          "placeholder": "50",
           "learnUrl": "https://cloud.google.com/compute/docs/disks"
         },
         {
@@ -311,6 +307,7 @@
           "name": "waitForOperation",
           "viewName": "Wait For Operation End",
           "type": "boolean",
+          "default": true,
           "description": "Wait until the operation is completed before moving onto the next Action in the pipeline.",
           "learnUrl": "https://github.com/Kaholo/kaholo-plugin-google-cloud-kubernetes-engine"
         }
@@ -320,13 +317,6 @@
       "name": "createClusterJson",
       "viewName": "Create Cluster From JSON",
       "params": [
-        {
-          "name": "creds",
-          "viewName": "Service Account Credentials *",
-          "type": "vault",
-          "description": "Vaulted JSON document containing service account credentials as provided by GCP",
-          "learnUrl": "https://cloud.google.com/docs/authentication/production"
-        },
         {
           "name": "project",
           "viewName": "Project",
@@ -399,13 +389,6 @@
       "name": "createNodePool",
       "viewName": "Create Node Pool",
       "params": [
-        {
-          "name": "creds",
-          "viewName": "Service Account Credentials",
-          "type": "vault",
-          "description": "Vaulted JSON document containing service account credentials as provided by GCP",
-          "learnUrl": "https://cloud.google.com/docs/authentication/production"
-        },
         {
           "name": "project",
           "viewName": "Project",
@@ -720,13 +703,6 @@
       "viewName": "Create Node Pool From JSON",
       "params": [
         {
-          "name": "creds",
-          "viewName": "Service Account Credentials",
-          "type": "vault",
-          "description": "Vaulted JSON document containing service account credentials as provided by GCP",
-          "learnUrl": "https://cloud.google.com/docs/authentication/production"
-        },
-        {
           "name": "project",
           "viewName": "Project",
           "type": "autocomplete",
@@ -791,13 +767,6 @@
       "viewName": "Delete Cluster",
       "params": [
         {
-          "name": "creds",
-          "viewName": "Service Account Credentials",
-          "type": "vault",
-          "description": "Vaulted JSON document containing service account credentials as provided by GCP",
-          "learnUrl": "https://cloud.google.com/docs/authentication/production"
-        },
-        {
           "name": "project",
           "viewName": "Project",
           "type": "autocomplete",
@@ -852,13 +821,6 @@
       "name": "deleteNodePool",
       "viewName": "Delete Node Pool",
       "params": [
-        {
-          "name": "creds",
-          "viewName": "Service Account Credentials",
-          "type": "vault",
-          "description": "Vaulted JSON document containing service account credentials as provided by GCP",
-          "learnUrl": "https://cloud.google.com/docs/authentication/production"
-        },
         {
           "name": "project",
           "viewName": "Project",
@@ -926,13 +888,6 @@
       "viewName": "Describe Cluster",
       "params": [
         {
-          "name": "creds",
-          "viewName": "Service Account Credentials",
-          "type": "vault",
-          "description": "Vaulted JSON document containing service account credentials as provided by GCP",
-          "learnUrl": "https://cloud.google.com/docs/authentication/production"
-        },
-        {
           "name": "project",
           "viewName": "Project",
           "type": "autocomplete",
@@ -980,13 +935,6 @@
       "name": "describeClusterCredentials",
       "viewName": "Describe Cluster Credentials",
       "params": [
-        {
-          "name": "creds",
-          "viewName": "Service Account Credentials",
-          "type": "vault",
-          "description": "Vaulted JSON document containing service account credentials as provided by GCP",
-          "learnUrl": "https://cloud.google.com/docs/authentication/production"
-        },
         {
           "name": "project",
           "viewName": "Project",
@@ -1036,13 +984,6 @@
       "viewName": "List Clusters",
       "params": [
         {
-          "name": "creds",
-          "viewName": "Service Account Credentials",
-          "type": "vault",
-          "description": "Vaulted JSON document containing service account credentials as provided by GCP",
-          "learnUrl": "https://cloud.google.com/docs/authentication/production"
-        },
-        {
           "name": "project",
           "viewName": "Project",
           "type": "autocomplete",
@@ -1079,13 +1020,6 @@
       "name": "listNodePools",
       "viewName": "List Node Pools",
       "params": [
-        {
-          "name": "creds",
-          "viewName": "Service Account Credentials",
-          "type": "vault",
-          "description": "Vaulted JSON document containing service account credentials as provided by GCP",
-          "learnUrl": "https://cloud.google.com/docs/authentication/production"
-        },
         {
           "name": "project",
           "viewName": "Project",
@@ -1135,22 +1069,6 @@
       "viewName": "Create Service Account",
       "params": [
         {
-          "name": "creds",
-          "viewName": "Default Service Account Credentials",
-          "type": "vault",
-          "required": true,
-          "description": "Vaulted JSON document containing service account credentials as provided by GCP",
-          "learnUrl": "https://cloud.google.com/docs/authentication/production"
-        },
-        {
-          "name": "zone",
-          "viewName": "Zone/Region",
-          "type": "string",
-          "required": true,
-          "description": "Zone or Region name where the operation is performed",
-          "learnUrl": "https://cloud.google.com/compute/docs/regions-zones"
-        },
-        {
           "name": "project",
           "viewName": "Project",
           "type": "autocomplete",
@@ -1162,16 +1080,34 @@
           "learnUrl": "https://cloud.google.com/resource-manager/docs/creating-managing-projects"
         },
         {
+          "name": "zone",
+          "viewName": "Zone/Region",
+          "type": "string",
+          "required": true,
+          "description": "Zone or Region name where the operation is performed",
+          "learnUrl": "https://cloud.google.com/compute/docs/regions-zones"
+        },
+        {
+          "name": "name",
+          "viewName": "Cluster Name",
+          "required": true,
+          "type": "string",
+          "description": "The name of the cluster",
+          "placeholder": "test-cluster-auto"
+        },
+        {
           "name": "namespace",
           "viewName": "Namespace",
-          "type": "string"
+          "type": "string",
+          "required": false,
+          "description": "A namespace to which the service account will be confined, if specified."
         },
         {
           "name": "serviceAccountName",
           "viewName": "Service Account name",
           "type": "string",
           "required": true,
-          "description": "Name of the new Service Account",
+          "description": "Name for the new Service Account",
           "learnUrl": "https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/"
         },
         {
@@ -1179,7 +1115,7 @@
           "viewName": "Role Binding name",
           "type": "string",
           "required": true,
-          "description": "Name which labels the Role Binding to use",
+          "description": "Name for the Role Binding that will be created",
           "learnUrl": "https://kubernetes.io/docs/reference/access-authn-authz/rbac/"
         },
         {
@@ -1187,7 +1123,8 @@
           "viewName": "Cluster Role name",
           "type": "string",
           "required": true,
-          "description": "Name which labels the Cluster Role to use",
+          "description": "Name of an existing role or cluster role to bind to the new service account",
+          "placeholder": "cluster-admin",
           "learnUrl": "https://kubernetes.io/docs/reference/access-authn-authz/rbac/"
         }
       ]
